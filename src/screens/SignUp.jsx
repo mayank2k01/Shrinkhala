@@ -1,7 +1,6 @@
-// SignUp.js
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native'; // Use useNavigation hook instead of navigate directly
+import { View, Text, TextInput, Button, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignUp = ({ phoneNumber, setPhoneNumber }) => {
@@ -9,7 +8,7 @@ const SignUp = ({ phoneNumber, setPhoneNumber }) => {
   const [isValid, setIsValid] = useState(true);
   const [numberErrorMsg, setNumberErrorMsg] = useState('');
   const [numberError, setNumberError] = useState(false);
-  const navigation = useNavigation(); // Use navigation hook
+  const navigation = useNavigation();
 
   const numberValidator = (value) => {
     setInputValue(value);
@@ -17,18 +16,17 @@ const SignUp = ({ phoneNumber, setPhoneNumber }) => {
   };
 
   const backButtonHandler = () => {
-    navigation.navigate('LoginPage'); // Correct navigation method
+    navigation.navigate('LoginPage');
   };
 
-  const numberSubmit =async () => {
+  const numberSubmit = async () => {
     console.log('inputValue-', inputValue);
 
     if (inputValue.length === 10) {
       setNumberError(false);
       setPhoneNumber(inputValue);
       await AsyncStorage.setItem('phoneNumber', inputValue);
-    //   localStorage.setItem('phoneNumber', inputValue); // Consider using AsyncStorage instead of localStorage in React Native Expo
-      navigation.navigate('OtpScreen', { phoneNumber: inputValue }); // Correct navigation method
+      navigation.navigate('OtpScreen', { phoneNumber: inputValue });
     } else {
       setNumberError(true);
       setNumberErrorMsg('Please enter a 10 digit phone number.');
@@ -40,26 +38,29 @@ const SignUp = ({ phoneNumber, setPhoneNumber }) => {
   }, []);
 
   return (
-    <View style={{ backgroundColor: 'white', flex: 1, marginTop: 8, marginHorizontal: 20 }}>
-      <View style={{ marginTop: 20 }}>
-        <Text style={{ fontSize: 30, fontWeight: 'bold', textAlign: 'center', color: 'teal' }}>Shrinkhala</Text>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Shrinkhala</Text>
       </View>
-      <View style={{ marginTop: 20 }}>
-        <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>Please register yourself</Text>
+      <View style={styles.subHeader}>
+        <Text style={styles.subTitle}>Please register yourself</Text>
       </View>
 
-      <View>
-        <View style={{ height: 20 }} />
+      <View style={styles.form}>
+        <View style={styles.spacer} />
 
-        <View style={{ marginTop: 10 }}>
-          <Text style={{ fontSize: 18 }}>Enter mobile number:</Text>
+        <View style={styles.inputLabel}>
+          <Text style={styles.labelText}>Enter mobile number:</Text>
         </View>
 
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          {/* Assuming back.svg is an image in your project's assets folder */}
-          <Image source={require('../../assets/back.svg')} style={{ width: 20, height: 20, marginRight: 10 }} onPress={backButtonHandler} />
+        <View style={styles.inputContainer}>
+          <Image
+            source={require('../../assets/back.svg')}
+            style={styles.backIcon}
+            onPress={backButtonHandler}
+          />
           <TextInput
-            style={{ backgroundColor: '#f5f5f5', borderRadius: 50, padding: 10, flex: 1 }}
+            style={styles.input}
             keyboardType="numeric"
             maxLength={10}
             value={inputValue}
@@ -67,15 +68,95 @@ const SignUp = ({ phoneNumber, setPhoneNumber }) => {
             onChangeText={numberValidator}
           />
         </View>
-        {!isValid && <Text style={{ color: 'red', marginTop: 3 }}>Please enter a valid number</Text>}
-        {numberError && <Text style={{ color: 'red', marginTop: 3 }}>{numberErrorMsg}</Text>}
+        {!isValid && <Text style={styles.errorText}>Please enter a valid number</Text>}
+        {numberError && <Text style={styles.errorText}>{numberErrorMsg}</Text>}
 
-        <View style={{ marginTop: 10 }}>
-          <Button title="Continue" onPress={numberSubmit} color="teal" />
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.continueButton} onPress={numberSubmit}>
+            <Text style={styles.buttonText}>Continue</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    flex: 1,
+    marginTop: 8,
+    marginHorizontal: 20,
+    paddingTop: 60,
+  },
+  header: {
+    marginTop: 20,
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'teal',
+  },
+  subHeader: {
+    marginTop: 20,
+    paddingTop: 40,
+  },
+  subTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  form: {
+    marginTop: 20,
+  },
+  spacer: {
+    height: 20,
+  },
+  inputLabel: {
+    marginTop: 10,
+    paddingBottom: 20,
+    paddingLeft: 10,
+    alignItems: 'center', // Center the label
+  },
+  labelText: {
+    fontSize: 18,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  backIcon: {
+    width: 20,
+    height: 20,
+    marginRight: 10,
+  },
+  input: {
+    backgroundColor: '#f5f5f5',
+    borderRadius: 50,
+    padding: 10,
+    marginRight: 24,
+    flex: 1,
+  },
+  errorText: {
+    color: 'red',
+    marginTop: 7,
+    marginLeft: 35,
+  },
+  buttonContainer: {
+    marginTop: 30,
+    marginHorizontal: 24,
+  },
+  continueButton: {
+    backgroundColor: '#0198A5',
+    borderRadius: 50,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+});
 
 export default SignUp;

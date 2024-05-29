@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, Image, TouchableOpacity, StyleSheet, Picker, ScrollView } from 'react-native';
+import { View, Text, TextInput, Button, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RadioButton } from 'react-native-paper'; // Import RadioButton
 import CheckBox from '../components/CheckBox';
 // import CheckBox from '@react-native-community/checkbox'; // Import CheckBox
 // import CheckBox from '@react-native-checkbox'; // Import CheckBox
-// import { Picker } from '@react-native-picker/picker'; // Import Picker
+import { Picker } from '@react-native-picker/picker'; // Import Picker
 import back from '../../assets/back.svg'; // Ensure you have the image in the correct path
 
 const MoreDetails = ({
@@ -218,6 +218,7 @@ const MoreDetails = ({
         title="Submit"
         onPress={handleSubmitChange}
         disabled={isDisabled}
+        color={'#008080'}
       />
       <TouchableOpacity onPress={backButtonHandler}>
         <Text style={styles.laterText}>Do it later</Text>
@@ -245,6 +246,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     flex: 1,
+    color: '#008080',
   },
   subtitle: {
     fontSize: 18,

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, StyleSheet, FlatList, TouchableOpacity, Modal, Image, Alert } from "react-native";
+import { View, Text, Button, StyleSheet, FlatList, TouchableOpacity, Modal, ImageBackground, Alert } from "react-native";
 import axios from "axios";
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import backgroundImage from '../../assets/transparent-bg.png';
 
 const Dashboard = () => {
   const [userName, setUserName] = useState('');
@@ -105,79 +106,90 @@ const Dashboard = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Medi.ai</Text>
-      <View style={styles.profileContainer}>
-        <View style={styles.circularIcon}>
-          <Text style={styles.initials}>{getInitials(name)}</Text>
-        </View>
-        <Text style={styles.userInfo}>Patient: {name}</Text>
-        <Text style={styles.userInfo}>UID No: {userName}</Text>
-      </View>
-
-      <View style={styles.actionsContainer}>
-        <TouchableOpacity style={styles.button} onPress={openModal}>
-          <Text style={styles.buttonText}>Upload Report</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ShareReport')}>
-          <Text style={styles.buttonText}>Share with Doctor</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.filterContainer}>
-        <TouchableOpacity onPress={() => handleSpanClick("All")} style={[styles.filterButton, activeSpan === "All" && styles.activeFilter]}>
-          <Text style={styles.filterText}>All</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleSpanClick("Blood test")} style={[styles.filterButton, activeSpan === "Blood test" && styles.activeFilter]}>
-          <Text style={styles.filterText}>Blood test</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleSpanClick("Radiology")} style={[styles.filterButton, activeSpan === "Radiology" && styles.activeFilter]}>
-          <Text style={styles.filterText}>Radiology</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleSpanClick("Pathology")} style={[styles.filterButton, activeSpan === "Pathology" && styles.activeFilter]}>
-          <Text style={styles.filterText}>Pathology</Text>
-        </TouchableOpacity>
-      </View>
-
-      <FlatList
-        data={filteredReports}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item, index }) => (
-          <View style={styles.reportItem}>
-            <View>
-              <Text style={styles.reportTitle}>Report Name: {index + 1}</Text>
-              <Text>Test Type: {item.test_name}</Text>
-              <Button title="Download" onPress={() => handleDownload(item.unique_file_path_name)} />
-            </View>
-            <View>
-              <Text>Date: {item.extracted_date}</Text>
-              <Button title="View" onPress={() => handleView(item.unique_file_path_name)} />
-            </View>
+    <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
+      <View style={styles.overlay}>
+        <Text style={styles.title}>Medi.ai</Text>
+        <View style={styles.profileContainer}>
+          <View style={styles.circularIcon}>
+            <Text style={styles.initials}>{getInitials(name)}</Text>
           </View>
-        )}
-      />
+          <Text style={styles.userInfo}>Patient: {name}</Text>
+          <Text style={styles.userInfo}>UID No: {userName}</Text>
+        </View>
 
-      <Modal visible={showModal} transparent={true} animationType="slide">
-        <View style={styles.modalContainer}>
-          <TouchableOpacity style={styles.modalClose} onPress={closeModal}>
-            <Text style={styles.modalCloseText}>&times;</Text>
+        <View style={styles.actionsContainer}>
+          <TouchableOpacity style={styles.button} onPress={openModal}>
+            <Text style={styles.buttonText}>Upload Report</Text>
           </TouchableOpacity>
-          <Text style={styles.modalTitle}>Upload a new Report</Text>
-          <TouchableOpacity style={styles.uploadButton} onPress={handleUploadReport}>
-            <Text style={styles.uploadButtonText}>From Phone</Text>
-          </TouchableOpacity>
-          <Text style={styles.orText}>OR</Text>
-          <TouchableOpacity style={styles.uploadButton} onPress={handleCaptureImage}>
-            <Text style={styles.uploadButtonText}>Scan report</Text>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ShareReport')}>
+            <Text style={styles.buttonText}>Share with Doctor</Text>
           </TouchableOpacity>
         </View>
-      </Modal>
-    </View>
+
+        <View style={styles.filterContainer}>
+          <TouchableOpacity onPress={() => handleSpanClick("All")} style={[styles.filterButton, activeSpan === "All" && styles.activeFilter]}>
+            <Text style={styles.filterText}>All</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleSpanClick("Blood test")} style={[styles.filterButton, activeSpan === "Blood test" && styles.activeFilter]}>
+            <Text style={styles.filterText}>Blood test</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleSpanClick("Radiology")} style={[styles.filterButton, activeSpan === "Radiology" && styles.activeFilter]}>
+            <Text style={styles.filterText}>Radiology</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleSpanClick("Pathology")} style={[styles.filterButton, activeSpan === "Pathology" && styles.activeFilter]}>
+            <Text style={styles.filterText}>Pathology</Text>
+          </TouchableOpacity>
+        </View>
+
+        <FlatList
+          data={filteredReports}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item, index }) => (
+            <View style={styles.reportItem}>
+              <View>
+                <Text style={styles.reportTitle}>Report Name: {index + 1}</Text>
+                <Text>Test Type: {item.test_name}</Text>
+                <Button title="Download" onPress={() => handleDownload(item.unique_file_path_name)} />
+              </View>
+              <View>
+                <Text>Date: {item.extracted_date}</Text>
+                <Button title="View" onPress={() => handleView(item.unique_file_path_name)} />
+              </View>
+            </View>
+          )}
+        />
+
+        <Modal visible={showModal} transparent={true} animationType="slide">
+          <View style={styles.modalContainer}>
+            <TouchableOpacity style={styles.modalClose} onPress={closeModal}>
+              <Text style={styles.modalCloseText}>&times;</Text>
+            </TouchableOpacity>
+            <Text style={styles.modalTitle}>Upload a new Report</Text>
+            <TouchableOpacity style={styles.uploadButton} onPress={handleUploadReport}>
+              <Text style={styles.uploadButtonText}>From Phone</Text>
+            </TouchableOpacity>
+            <Text style={styles.orText}>OR</Text>
+            <TouchableOpacity style={styles.uploadButton} onPress={handleCaptureImage}>
+              <Text style={styles.uploadButtonText}>Scan report</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: 'white' },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    padding: 20,
+  },
+  container: { flex: 1, padding: 20 },
   title: { fontSize: 24, fontWeight: 'bold', color: '#00796b' },
   profileContainer: { alignItems: 'center', marginVertical: 20 },
   circularIcon: { width: 100, height: 100, borderRadius: 50, backgroundColor: '#00796b', justifyContent: 'center', alignItems: 'center' },
