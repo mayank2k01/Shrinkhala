@@ -64,7 +64,10 @@ const CreateNewPassword = () => {
                 onChangeText={handleReEnteredPasswordChange}
             />
             {!passwordsMatch && <Text style={styles.errorMsg}>Passwords do not match</Text>}
-            <Button title="Save Password" onPress={handleSubmit} color="#008080" />
+            {/* <Button title="Save Password" onPress={handleSubmit} color="#008080" /> */}
+                <TouchableOpacity style={styles.button} onPress={handleSubmit} >
+            <Text style={styles.buttonText}>Save Password</Text>
+        </TouchableOpacity>
         </View>
     );
 };
@@ -101,7 +104,7 @@ const styles = StyleSheet.create({
     input: {
         borderWidth: 1,
         borderColor: '#ccc',
-        borderRadius: 5,
+        borderRadius: 50,
         padding: 10,
         fontSize: 16,
         marginBottom: 20,
@@ -110,6 +113,18 @@ const styles = StyleSheet.create({
         color: 'red',
         marginBottom: 20,
     },
+    button: {
+        backgroundColor: '#008080',
+        padding: 16,
+        borderRadius: 25,
+        alignItems: 'center',
+        width: '100%',
+        marginVertical: 16,
+      },
+      buttonText: {
+        color: 'white',
+        fontSize: 16,
+      },
 });
 
 export default CreateNewPassword;

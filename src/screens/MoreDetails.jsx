@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RadioButton } from 'react-native-paper'; // Import RadioButton
 import CheckBox from '../components/CheckBox';
-// import CheckBox from '@react-native-community/checkbox'; // Import CheckBox
-// import CheckBox from '@react-native-checkbox'; // Import CheckBox
 import { Picker } from '@react-native-picker/picker'; // Import Picker
 import back from '../../assets/back.svg'; // Ensure you have the image in the correct path
 
@@ -57,7 +55,6 @@ const MoreDetails = ({
 
   const handleSubmitChange = () => {
     navigation.navigate('FirstPasswordCreation');
-
   }
 
   useEffect(() => {
@@ -214,12 +211,14 @@ const MoreDetails = ({
         <Text style={styles.checkboxLabel}>I agree to the Terms and Conditions</Text>
       </View>
 
-      <Button
-        title="Submit"
+      <TouchableOpacity
+        style={[styles.submitButton, isDisabled && styles.disabledButton]}
         onPress={handleSubmitChange}
         disabled={isDisabled}
-        color={'#008080'}
-      />
+      >
+        <Text style={styles.submitButtonText}>Submit</Text>
+      </TouchableOpacity>
+
       <TouchableOpacity onPress={backButtonHandler}>
         <Text style={styles.laterText}>Do it later</Text>
       </TouchableOpacity>
@@ -294,6 +293,20 @@ const styles = StyleSheet.create({
   },
   checkboxLabel: {
     marginLeft: 8,
+  },
+  submitButton: {
+    backgroundColor: '#008080',
+    padding: 15,
+    borderRadius: 50,
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  disabledButton: {
+    backgroundColor: '#d3d3d3',
+  },
+  submitButtonText: {
+    color: 'white',
+    fontSize: 16,
   },
   laterText: {
     color: '#008080',

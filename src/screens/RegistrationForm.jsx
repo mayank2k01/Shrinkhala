@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Button, Platform, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Platform, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RadioButton } from 'react-native-paper';
 import { Picker } from '@react-native-picker/picker';
+
+const { width, height } = Dimensions.get('window');
 
 const RegistrationForm = ({ phoneNumber, patientDetails, setPatientDetails }) => {
   const navigation = useNavigation();
@@ -72,7 +74,7 @@ const RegistrationForm = ({ phoneNumber, patientDetails, setPatientDetails }) =>
 
   return (
     <View style={styles.wrapper}>
-      <ScrollView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.header}>Shrinkhala</Text>
         <Text style={styles.title}>Welcome to Shrinkhala!</Text>
         <Text>Please fill up the mandatory details to continue</Text>
@@ -248,7 +250,9 @@ const RegistrationForm = ({ phoneNumber, patientDetails, setPatientDetails }) =>
         />
       </ScrollView>
       <View style={styles.footer}>
-        <Button title="Submit" onPress={registerFormSubmit} color={'#008080'}/>
+        <TouchableOpacity style={styles.submitButton} onPress={registerFormSubmit}>
+          <Text style={styles.submitButtonText}>Submit</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -260,71 +264,84 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   container: {
-    padding: 20,
+    padding: width * 0.05,
+    paddingBottom: height * 0.1, // Add more padding at the bottom
   },
   header: {
-    fontSize: 24,
+    fontSize: width * 0.06,
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#008080',
-    marginVertical: 20,
+    marginVertical: width * 0.05,
   },
   title: {
-    fontSize: 18,
+    fontSize: width * 0.045,
     fontWeight: 'bold',
   },
   sectionTitle: {
-    marginTop: 20,
+    marginTop: width * 0.05,
   },
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 50,
-    padding: 10,
-    marginVertical: 10,
+    padding: width * 0.025,
+    marginVertical: width * 0.025,
+    flex: 1, // Ensure inputs take up available space to prevent overflow
   },
   halfInput: {
     flex: 1,
   },
   radioContainer: {
     flexDirection: 'row',
-    marginVertical: 10,
+    marginVertical: width * 0.025,
   },
   radioOption: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 10,
+    marginRight: width * 0.025,
   },
   radioText: {
-    marginLeft: 5,
+    marginLeft: width * 0.01,
   },
   datePicker: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 50,
-    padding: 10,
-    marginVertical: 10,
+    padding: width * 0.025,
+    marginVertical: width * 0.025,
     justifyContent: 'center',
     alignItems: 'center',
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: 10,
+    marginVertical: width * 0.025,
   },
   marginRight: {
-    marginRight: 5,
+    marginRight: width * 0.0125,
   },
   marginLeft: {
-    marginLeft: 5,
+    marginLeft: width * 0.0125,
   },
   picker: {
-    height: 40,
+    height: width * 0.1,
     marginTop: -5,
   },
   footer: {
-    padding: 20,
+    padding: width * 0.05,
     backgroundColor: '#fff',
+  },
+  submitButton: {
+    backgroundColor: '#008080',
+    borderRadius: 50,
+    paddingVertical: width * 0.025,
+    alignItems: 'center',
+  },
+  submitButtonText: {
+    color: '#fff',
+    fontSize: width * 0.04,
+    fontWeight: 'bold',
   },
 });
 

@@ -113,7 +113,7 @@ const Dashboard = () => {
           <View style={styles.circularIcon}>
             <Text style={styles.initials}>{getInitials(name)}</Text>
           </View>
-          <Text style={styles.userInfo}>Patient: {name}</Text>
+          <Text style={styles.userInfo}>Patient: Mayank Jha{name}</Text>
           <Text style={styles.userInfo}>UID No: {userName}</Text>
         </View>
 
@@ -146,14 +146,14 @@ const Dashboard = () => {
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => (
             <View style={styles.reportItem}>
-              <View>
+              <View style={styles.reportInfo}>
                 <Text style={styles.reportTitle}>Report Name: {index + 1}</Text>
                 <Text>Test Type: {item.test_name}</Text>
-                <Button title="Download" onPress={() => handleDownload(item.unique_file_path_name)} />
-              </View>
-              <View>
                 <Text>Date: {item.extracted_date}</Text>
-                <Button title="View" onPress={() => handleView(item.unique_file_path_name)} />
+              </View>
+              <View style={styles.buttonContainer}>
+                <Button color={'#00796b'} title="Download" onPress={() => handleDownload(item.unique_file_path_name)} />
+                <Button color={'#00796b'} title="View" onPress={() => handleView(item.unique_file_path_name)} />
               </View>
             </View>
           )}
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     padding: 20,
   },
   container: { flex: 1, padding: 20 },
@@ -202,8 +202,10 @@ const styles = StyleSheet.create({
   filterButton: { padding: 10, borderRadius: 10, backgroundColor: '#e0e0e0' },
   activeFilter: { backgroundColor: '#00796b' },
   filterText: { color: 'white', fontSize: 16 },
-  reportItem: { flexDirection: 'row', justifyContent: 'space-between', padding: 10, marginVertical: 5, borderWidth: 1, borderColor: '#ddd', borderRadius: 10 },
+  reportItem: { flexDirection: 'column', justifyContent: 'space-between', padding: 10, marginVertical: 5, borderWidth: 1, borderColor: '#ddd', borderRadius: 10 },
+  reportInfo: { marginBottom: 10 },
   reportTitle: { fontWeight: 'bold' },
+  buttonContainer: { flexDirection: 'row', justifyContent: 'space-between',  },
   modalContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' },
   modalClose: { position: 'absolute', top: 40, right: 20 },
   modalCloseText: { fontSize: 24, color: 'white' },

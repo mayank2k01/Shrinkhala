@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import back from '../../assets/back.svg';
@@ -89,7 +89,9 @@ const FirstPasswordCreation = () => {
                 onChangeText={handleReEnteredPasswordChange}
             />
             {!passwordsMatch && <Text style={styles.errorMsg}>Passwords do not match</Text>}
-            <Button title="Save Password" onPress={handleSubmit} color="#008080" />
+            <TouchableOpacity style={styles.saveButton} onPress={handleSubmit}>
+                <Text style={styles.saveButtonText}>Save Password</Text>
+            </TouchableOpacity>
         </View>
     );
 };
@@ -126,14 +128,24 @@ const styles = StyleSheet.create({
     input: {
         borderWidth: 1,
         borderColor: '#ccc',
-        borderRadius: 5,
         padding: 10,
         fontSize: 16,
         marginBottom: 20,
+        borderRadius: 50
     },
     errorMsg: {
         color: 'red',
         marginBottom: 20,
+    },
+    saveButton: {
+        backgroundColor: '#008080',
+        padding: 15,
+        borderRadius: 50,
+        alignItems: 'center',
+    },
+    saveButtonText: {
+        color: 'white',
+        fontSize: 16,
     },
 });
 

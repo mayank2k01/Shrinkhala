@@ -60,7 +60,10 @@ const ForgetPassword = () => {
       {numberError && <Text style={styles.errorText}>{numberErrorMsg}</Text>}
 
       <View style={styles.buttonContainer}>
-        <Button title="Continue" onPress={numberSubmit} color="teal" />
+        {/* <Button title="Continue" onPress={numberSubmit} color="teal" /> */}
+        <TouchableOpacity style={styles.button} onPress={numberSubmit} >
+            <Text style={styles.buttonText}>Save Password</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -87,8 +90,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   image: {
-    width: 50,
-    height: 50,
+    width: 100,
+    height: 100,
     alignSelf: 'center',
     marginVertical: 20,
   },
@@ -117,6 +120,18 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 20,
+  },
+  button: {
+    backgroundColor: '#008080',
+    padding: 16,
+    borderRadius: 25,
+    alignItems: 'center',
+    width: '100%',
+    marginVertical: 16,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
   },
 });
 

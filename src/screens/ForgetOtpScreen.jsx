@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     marginVertical: 16,
+    alignItems: 'center',
   },
   instructions: {
     fontSize: 16,
