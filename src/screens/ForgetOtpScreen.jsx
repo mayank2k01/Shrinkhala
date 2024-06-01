@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#008080',
+    color: '#0198A5',
     marginVertical: 16,
   },
   image: {
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   button: {
-    backgroundColor: '#008080',
+    backgroundColor: '#0198A5',
     padding: 16,
     borderRadius: 25,
     alignItems: 'center',

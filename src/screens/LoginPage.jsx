@@ -133,13 +133,13 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: '#38b2ac',
+    color: '#0198A5',
     marginBottom: 20,
   },
   subtitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#38b2ac',
+    color: '#0198A5',
     marginBottom: 10,
   },
   buttonContainer: {
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   submitButton: {
-    backgroundColor: '#38b2ac',
+    backgroundColor: '#0198A5',
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   linkText: {
-    color: '#38b2ac',
+    color: '#0198A5',
     textAlign: 'center',
     marginTop: 10,
   },
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   signUpLink: {
-    color: '#38b2ac',
+    color: '#0198A5',
     textDecorationLine: 'underline',
   },
   footerContainer: {

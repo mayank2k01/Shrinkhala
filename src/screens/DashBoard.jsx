@@ -4,6 +4,7 @@ import axios from "axios";
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MaterialIcons } from '@expo/vector-icons';
 import backgroundImage from '../../assets/transparent-bg.png';
 
 const Dashboard = () => {
@@ -12,13 +13,13 @@ const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [reports, setReports] = useState([]);
   const [activeSpan, setActiveSpan] = useState("All");
+  const [activeTab, setActiveTab] = useState('Home');
 
   const navigation = useNavigation();
 
   useEffect(() => {
     const getUserInfo = async () => {
-    //   const username = await AsyncStorage.getItem('userName');
-    const username =  'SuKu45675';
+      const username = 'SuKu45675'; // replace this with actual async storage call if needed
       if (username) {
         setUserName(username);
       }
@@ -116,16 +117,31 @@ const Dashboard = () => {
           <Text style={styles.userInfo}>Patient: Mayank Jha{name}</Text>
           <Text style={styles.userInfo}>UID No: {userName}</Text>
         </View>
-
+        <View
+      style={{
+          borderBottomColor: 'black',
+          borderBottomWidth: StyleSheet.hairlineWidth,
+        }}
+      />
         <View style={styles.actionsContainer}>
           <TouchableOpacity style={styles.button} onPress={openModal}>
+            <MaterialIcons name="cloud-upload" size={28} color="#0198A5" style={styles.icon} />
             <Text style={styles.buttonText}>Upload Report</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ShareReport')}>
+            <MaterialIcons name="share" size={24} color="#0198A5" style={styles.icon} />
             <Text style={styles.buttonText}>Share with Doctor</Text>
           </TouchableOpacity>
         </View>
-
+        <View
+          style={{
+            borderBottomColor: 'black',
+            borderBottomWidth: StyleSheet.hairlineWidth,
+          }}
+        />
+        <View style={{paddingTop: 10}}>
+          <Text style={{fontSize: 20, }}>Your Reports</Text>
+        </View>
         <View style={styles.filterContainer}>
           <TouchableOpacity onPress={() => handleSpanClick("All")} style={[styles.filterButton, activeSpan === "All" && styles.activeFilter]}>
             <Text style={styles.filterText}>All</Text>
@@ -148,12 +164,16 @@ const Dashboard = () => {
             <View style={styles.reportItem}>
               <View style={styles.reportInfo}>
                 <Text style={styles.reportTitle}>Report Name: {index + 1}</Text>
-                <Text>Test Type: {item.test_name}</Text>
-                <Text>Date: {item.extracted_date}</Text>
+                <Text style={{fontSize: 13}}>Test Type: {item.test_name}</Text>
+                <Text style={{fontSize: 13}}>Date: {item.extracted_date}</Text>
               </View>
               <View style={styles.buttonContainer}>
-                <Button color={'#00796b'} title="Download" onPress={() => handleDownload(item.unique_file_path_name)} />
-                <Button color={'#00796b'} title="View" onPress={() => handleView(item.unique_file_path_name)} />
+                <TouchableOpacity style={styles.btn} onPress={() => handleDownload(item.unique_file_path_name)} >
+                  <Text style={styles.btnText}>  Download  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.btn} onPress={() => handleView(item.unique_file_path_name)} >
+                <Text style={styles.btnText}>  View  </Text>
+                </TouchableOpacity>
               </View>
             </View>
           )}
@@ -175,6 +195,35 @@ const Dashboard = () => {
           </View>
         </Modal>
       </View>
+      <View style={styles.tabContainer}>
+        <TouchableOpacity
+          style={styles.tab}
+          onPress={() => {
+            setActiveTab('Profile');
+            navigation.navigate('Profile');
+          }}
+        >
+          <MaterialIcons name="person" size={30} color={activeTab === 'Profile' ? '#0198A5' : 'grey'} />
+          <Text style={[styles.tabText, activeTab === 'Profile' && styles.activeTabText]}>Profile</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.tab}
+          onPress={() => setActiveTab('Home')}
+        >
+          <MaterialIcons name="home" size={30} color={activeTab === 'Home' ? '#0198A5' : 'grey'} />
+          <Text style={[styles.tabText, activeTab === 'Home' && styles.activeTabText]}>Home</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.tab}
+          onPress={() => {
+            setActiveTab('Notification');
+            navigation.navigate('Notification');
+          }}
+        >
+          <MaterialIcons name="notifications" size={30} color={activeTab === 'Notification' ? '#0198A5' : 'grey'} />
+          <Text style={[styles.tabText, activeTab === 'Notification' && styles.activeTabText]}>Notification</Text>
+        </TouchableOpacity>
+      </View>
     </ImageBackground>
   );
 };
@@ -186,33 +235,64 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0)',
     padding: 20,
   },
   container: { flex: 1, padding: 20 },
-  title: { fontSize: 24, fontWeight: 'bold', color: '#00796b' },
+  title: { fontSize: 24, fontWeight: 'bold', color: '#0198A5' },
   profileContainer: { alignItems: 'center', marginVertical: 20 },
-  circularIcon: { width: 100, height: 100, borderRadius: 50, backgroundColor: '#00796b', justifyContent: 'center', alignItems: 'center' },
+  circularIcon: { width: 70, height: 70, borderRadius: 50, backgroundColor: '#e4d8fc', justifyContent: 'center', alignItems: 'center' },
   initials: { color: 'white', fontSize: 32, fontWeight: 'bold' },
   userInfo: { fontSize: 18, marginVertical: 5 },
   actionsContainer: { flexDirection: 'row', justifyContent: 'space-around', marginVertical: 20 },
-  button: { backgroundColor: '#00796b', padding: 15, borderRadius: 10 },
-  buttonText: { color: 'white', fontSize: 16 },
+  button: { backgroundColor: '#e6f6f6', padding: 15, borderRadius: 5, alignItems: 'center', paddingVertical: 40 },
+  buttonText: { color: '#0198A5', fontSize: 16, marginTop: 5 },
+  icon: { marginBottom: 5 },
   filterContainer: { flexDirection: 'row', justifyContent: 'space-around', marginVertical: 20 },
-  filterButton: { padding: 10, borderRadius: 10, backgroundColor: '#e0e0e0' },
-  activeFilter: { backgroundColor: '#00796b' },
+  filterButton: { padding: 10, borderRadius: 18, backgroundColor: '#e0e0e0' },
+  activeFilter: { backgroundColor: '#0198A5' },
   filterText: { color: 'white', fontSize: 16 },
-  reportItem: { flexDirection: 'column', justifyContent: 'space-between', padding: 10, marginVertical: 5, borderWidth: 1, borderColor: '#ddd', borderRadius: 10 },
+  reportItem: { flexDirection: 'column', justifyContent: 'space-between', padding: 10, marginVertical: 5, borderWidth: 1, borderColor: '#ddd', borderRadius: 10, backgroundColor: 'white' },
   reportInfo: { marginBottom: 10 },
   reportTitle: { fontWeight: 'bold' },
-  buttonContainer: { flexDirection: 'row', justifyContent: 'space-between',  },
+  buttonContainer: { flexDirection: 'row', justifyContent: 'space-between' },
   modalContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' },
   modalClose: { position: 'absolute', top: 40, right: 20 },
   modalCloseText: { fontSize: 24, color: 'white' },
   modalTitle: { fontSize: 20, marginBottom: 20, color: 'white' },
-  uploadButton: { backgroundColor: '#00796b', padding: 15, borderRadius: 10, marginVertical: 10 },
+  uploadButton: { backgroundColor: '#0198A5', padding: 15, borderRadius: 10, marginVertical: 10 },
   uploadButtonText: { color: 'white', fontSize: 16 },
-  orText: { color: 'white', marginVertical: 20 }
+  orText: { color: 'white', marginVertical: 20 },
+  tabContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+    paddingVertical: 10,
+    backgroundColor: '#fff',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+  },
+  tab: {
+    alignItems: 'center',
+    paddingVertical: 10,
+  },
+  tabText: {
+    color: 'grey',
+    marginTop: 5,
+  },
+  activeTabText: {
+    color: '#0198A5',
+  },
+  btn: {
+    backgroundColor: '#e6f6f6',
+    borderRadius: 15,
+    padding: 4
+  },
+  btnText: {
+    color: '#0198A5',
+  }
 });
 
 export default Dashboard;

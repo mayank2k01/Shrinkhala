@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#38b2ac',
+    color: '#0198A5',
     marginVertical: 20,
   },
   title: {
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   button: {
-    backgroundColor: '#38b2ac',
+    backgroundColor: '#0198A5',
     padding: 15,
     borderRadius: 25,
     width: '100%',
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
   resendText: {
     textAlign: 'center',
     marginTop: 20,
-    color: '#38b2ac',
+    color: '#0198A5',
   },
 });
 

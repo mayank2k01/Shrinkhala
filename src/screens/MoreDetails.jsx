@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     flex: 1,
-    color: '#008080',
+    color: '#0198A5',
   },
   subtitle: {
     fontSize: 18,
@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   submitButton: {
-    backgroundColor: '#008080',
+    backgroundColor: '#0198A5',
     padding: 15,
     borderRadius: 50,
     alignItems: 'center',
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   laterText: {
-    color: '#008080',
+    color: '#0198A5',
     textAlign: 'center',
     marginTop: 16,
     textDecorationLine: 'underline',

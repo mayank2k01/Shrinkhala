@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.06,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: '#008080',
+    color: '#0198A5',
     marginVertical: width * 0.05,
   },
   title: {
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   submitButton: {
-    backgroundColor: '#008080',
+    backgroundColor: '#0198A5',
     borderRadius: 50,
     paddingVertical: width * 0.025,
     alignItems: 'center',

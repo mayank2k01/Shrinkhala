@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: 'teal',
+    color: '#0198A5',
   },
   subHeader: {
     marginTop: 20,

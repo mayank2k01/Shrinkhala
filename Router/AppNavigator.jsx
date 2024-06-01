@@ -14,6 +14,7 @@ import ForgetPassword from '../src/screens/ForgetPassword';
 import ForgetOtpScreen from '../src/screens/ForgetOtpScreen';
 import CreateNewPassword from '../src/screens/CreateNewPassword';
 import Dashboard from '../src/screens/DashBoard';
+import ShareReport from '../src/screens/ShareReport';
 
 const Stack = createNativeStackNavigator();
 
@@ -51,6 +52,7 @@ const AppNavigator = () => {
          <Stack.Screen name="ForgetOtpScreen" component={ForgetOtpScreen} />
          <Stack.Screen name="CreateNewPassword" component={CreateNewPassword} />
          <Stack.Screen name="Dashboard" component={Dashboard} />
+         <Stack.Screen name="ShareReport" component={ShareReport} />
       </Stack.Navigator>
     
   );
