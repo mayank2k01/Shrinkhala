@@ -146,12 +146,12 @@ const ShareReport = () => {
                 <Text style={styles.subtitle}>All your Reports will be shared with the doctor</Text>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity style={styles.button} onPress={handleGenerateOTP}>
-                        <MaterialIcons name="lock" size={24} color="white" />
+                        <MaterialIcons name="lock" size={24} color="#0198A5" />
                         <Text style={styles.buttonText}>Via OTP</Text>
                     </TouchableOpacity>
                     <Text style={styles.orText}>OR</Text>
                     <TouchableOpacity style={styles.button} onPress={handleScannerOpen}>
-                        <MaterialIcons name="qr-code-scanner" size={24} color="white" />
+                        <MaterialIcons name="qr-code-scanner" size={24} color="#0198A5" />
                         <Text style={styles.buttonText}>Via QR Scanner</Text>
                     </TouchableOpacity>
                 </View>
@@ -226,6 +226,7 @@ const styles = StyleSheet.create({
     },
     container: {
         padding: 16,
+        backgroundColor: 'white',
     },
     title: {
         fontSize: 24,
@@ -240,11 +241,13 @@ const styles = StyleSheet.create({
     buttonContainer: {
         alignItems: 'center',
         marginBottom: 32,
+        
     },
     button: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#0198A5',
+        // backgroundColor: '#0198A5',
+        backgroundColor: '#e6f6f6',
         padding: 16,
         borderRadius: 8,
         marginVertical: 8,
@@ -252,7 +255,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     buttonText: {
-        color: 'white',
+        color: '#0198A5',
         fontSize: 16,
         marginLeft: 8,
     },
@@ -263,6 +266,7 @@ const styles = StyleSheet.create({
     },
     doctorsList: {
         marginTop: 32,
+        // backgroundColor: 'white'
     },
     doctorsListTitle: {
         fontSize: 20,

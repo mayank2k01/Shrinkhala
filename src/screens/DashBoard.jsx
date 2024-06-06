@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialIcons } from '@expo/vector-icons';
 import backgroundImage from '../../assets/transparent-bg.png';
+import whiteimg from '../../assets/white.png';
 
 const Dashboard = () => {
   const [userName, setUserName] = useState('');
@@ -107,12 +108,13 @@ const Dashboard = () => {
   };
 
   return (
-    <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
+    
+    <ImageBackground source={whiteimg} style={styles.backgroundImage}>
       <View style={styles.overlay}>
         <Text style={styles.title}>Medi.ai</Text>
         <View style={styles.profileContainer}>
           <View style={styles.circularIcon}>
-            <Text style={styles.initials}>{getInitials(name)}</Text>
+            <Text style={styles.initials}>MJ{getInitials(name)}</Text>
           </View>
           <Text style={styles.userInfo}>Patient: Mayank Jha{name}</Text>
           <Text style={styles.userInfo}>UID No: {userName}</Text>
@@ -139,6 +141,7 @@ const Dashboard = () => {
             borderBottomWidth: StyleSheet.hairlineWidth,
           }}
         />
+        <ImageBackground source={backgroundImage}>
         <View style={{paddingTop: 10}}>
           <Text style={{fontSize: 20, }}>Your Reports</Text>
         </View>
@@ -178,6 +181,7 @@ const Dashboard = () => {
             </View>
           )}
         />
+        </ImageBackground>
 
         <Modal visible={showModal} transparent={true} animationType="slide">
           <View style={styles.modalContainer}>
@@ -194,6 +198,7 @@ const Dashboard = () => {
             </TouchableOpacity>
           </View>
         </Modal>
+        
       </View>
       <View style={styles.tabContainer}>
         <TouchableOpacity
@@ -235,14 +240,14 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0)',
-    padding: 20,
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+    padding: 5,
   },
   container: { flex: 1, padding: 20 },
   title: { fontSize: 24, fontWeight: 'bold', color: '#0198A5' },
   profileContainer: { alignItems: 'center', marginVertical: 20 },
   circularIcon: { width: 70, height: 70, borderRadius: 50, backgroundColor: '#e4d8fc', justifyContent: 'center', alignItems: 'center' },
-  initials: { color: 'white', fontSize: 32, fontWeight: 'bold' },
+  initials: { color: '#7239EA', fontSize: 32, fontWeight: 'bold' },
   userInfo: { fontSize: 18, marginVertical: 5 },
   actionsContainer: { flexDirection: 'row', justifyContent: 'space-around', marginVertical: 20 },
   button: { backgroundColor: '#e6f6f6', padding: 15, borderRadius: 5, alignItems: 'center', paddingVertical: 40 },

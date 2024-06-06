@@ -1,37 +1,43 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, ScrollView,Dimensions } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { RadioButton } from 'react-native-paper'; // Import RadioButton
 import CheckBox from '../components/CheckBox';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker'; // Import Picker
 import back from '../../assets/back.svg'; // Ensure you have the image in the correct path
 
 const MoreDetails = ({
-  formData,
-  patientDetails,
-  phoneNumber,
-  pFirstName,
-  pLastName,
-  pOrCaregiver,
-  pDob,
-  pAge,
-  pGender,
-  pMaritialStatus,
-  pAlternateNo,
-  pHouse,
-  pLocality,
-  pCity,
-  pDistrict,
-  pState,
-  pPincode,
-  cFirstName,
-  cLastName,
-  cMobNo,
-  cRelation,
-  handleChange,
-  registerFormSubmit,
+  // formData,
+  // patientDetails,
+  // phoneNumber,
+  // pFirstName,
+  // pLastName,
+  // pOrCaregiver,
+  // pDob,
+  // pAge,
+  // pGender,
+  // pMaritialStatus,
+  // pAlternateNo,
+  // pHouse,
+  // pLocality,
+  // pCity,
+  // pDistrict,
+  // pState,
+  // pPincode,
+  // cFirstName,
+  // cLastName,
+  // cMobNo,
+  // cRelation,
+  // handleChange,
+  // registerFormSubmit,
 }) => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const { formData } = route.params;
+  useEffect(() => {
+    console.log("formdata---", formData);
+  }, []);
 
   const [otherFormData, setOtherFormData] = useState({
     caregiverOrOther: '',
@@ -53,19 +59,20 @@ const MoreDetails = ({
     setIsChecked(newValue);
   };
 
-  const handleSubmitChange = () => {
-    navigation.navigate('FirstPasswordCreation');
-  }
+  // const handleSubmitChange = () => {
+  //   navigation.navigate('FirstPasswordCreation');
+  // }
 
-  useEffect(() => {
-    console.log("pFirstName---", pFirstName);
-    console.log("pLastName---", pLastName);
-    console.log("pMobileNumber---", phoneNumber);
-    console.log("pOrCaregiver---", pOrCaregiver, pDob);
-  }, [pFirstName, pLastName, phoneNumber, pOrCaregiver, pDob]);
+  // useEffect(() => {
+  //   console.log("pFirstName---", pFirstName);
+  //   console.log("pLastName---", pLastName);
+  //   console.log("pMobileNumber---", phoneNumber);
+  //   console.log("pOrCaregiver---", pOrCaregiver, pDob);
+  // }, [pFirstName, pLastName, phoneNumber, pOrCaregiver, pDob]);
 
   const handleChangeLocal = (name, value) => {
     setOtherFormData({ ...otherFormData, [name]: value });
+    // console.log(formData.maritalStatus);
   };
 
   const backButtonHandler = () => {
@@ -81,6 +88,66 @@ const MoreDetails = ({
       setIsDisabled(true);
     }
   };
+  registerFormSubmit = () => {
+    const fullName = `${formData.firstName} ${formData.lastName}`;
+    AsyncStorage.setItem('fullName', fullName);
+  console.log("other form details-",otherFormData);
+  if(true) {
+    fetch('http://34.131.227.229:8081/patient', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+             phone_number: formData.mobileNumber,
+             first_name: formData.firstName,
+             last_name: formData.lastName,
+             date_of_birth: formData.dob,
+             age: formData.age,
+             gender: formData.gender,
+             marital_status: formData.maritalStatus,
+             alternate_mobile_number: formData.alternateNumber,
+             p_house_no: formData.house,
+             p_locality: formData.locality,
+             p_pin_code: formData.pincode,
+             p_state: formData.state,
+             p_city: formData.city,
+             p_district: formData.district,
+             address: formData.house+formData.locality+formData.state+formData.city+formData.district,
+             care_giver_first_name: otherFormData.otherFirstName,
+             care_giver_last_name: otherFormData.otherLastName,
+             care_giver_mobile_number: otherFormData.othermobileNumber,
+             care_giver_relation: otherFormData.caregiverOrOther,
+             c_house_no: otherFormData.kinHouse,
+             c_locality: otherFormData.kinLocality,
+             c_pin_code: otherFormData.kinPincode,
+             c_state: otherFormData.kinState,
+             c_city: otherFormData.kinCity,
+             c_district: otherFormData.kinDistrict
+        }),
+        referrerPolicy: 'strict-origin-when-cross-origin'
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+          AsyncStorage.setItem('userName', data.userName)
+          // dispatch(setUserName(data.userName));
+          navigation.navigate('/'+response.userName+':/firstPasswordCreation');
+       // navigate('/dashboard','{data?.userName}');
+       // history.push('/dashboard', { data });
+        console.log(data);
+        
+      })
+      .catch(error => {
+        // Handle error  
+      //  setErrormsg("UID or Password is incorrect");
+        console.error('There was a problem with the login request:', error);
+});
+  }}
 
   return (
     <ScrollView style={styles.container}>
@@ -98,6 +165,7 @@ const MoreDetails = ({
             value="Same as Care giver"
             status={otherFormData.caregiverOrOther === 'Same as Care giver' ? 'checked' : 'unchecked'}
             onPress={() => handleChangeLocal('caregiverOrOther', 'Same as Care giver')}
+            color="#0198A5"
           />
           <Text>Same as Care giver</Text>
         </View>
@@ -106,6 +174,7 @@ const MoreDetails = ({
             value="Other"
             status={otherFormData.caregiverOrOther === 'Other' ? 'checked' : 'unchecked'}
             onPress={() => handleChangeLocal('caregiverOrOther', 'Other')}
+            color="#0198A5"
           />
           <Text>Other</Text>
         </View>
@@ -113,23 +182,25 @@ const MoreDetails = ({
 
       {otherFormData.caregiverOrOther === 'Other' && (
         <View>
+          <Text style={styles.sectionTitle}>Kin's Details</Text>
           <View style={styles.inputGroup}>
+          
             <TextInput
-              style={styles.input}
-              placeholder="First Name"
+              style={[styles.input, styles.halfWidth]}
+              placeholder="   First Name"
               value={otherFormData.otherFirstName}
               onChangeText={(value) => handleChangeLocal('otherFirstName', value)}
             />
             <TextInput
-              style={styles.input}
-              placeholder="Last Name"
+              style={[styles.input, styles.halfWidth]}
+              placeholder="   Last Name"
               value={otherFormData.otherLastName}
               onChangeText={(value) => handleChangeLocal('otherLastName', value)}
             />
           </View>
           <TextInput
             style={styles.input}
-            placeholder="Mobile Number"
+            placeholder="   Mobile Number"
             keyboardType="numeric"
             maxLength={10}
             value={otherFormData.othermobileNumber}
@@ -157,45 +228,45 @@ const MoreDetails = ({
         </View>
       )}
 
-      <Text style={styles.sectionTitle}>Address</Text>
-      <View style={styles.inputGroup}>
+      <Text style={styles.sectionTitle}>Kin's Address</Text>
+      <View >
         <TextInput
-          style={styles.input}
-          placeholder="House/Flat Number"
+          style={[styles.input,]}
+          placeholder="   House/Flat Number"
           value={otherFormData.kinHouse}
           onChangeText={(value) => handleChangeLocal('kinHouse', value)}
         />
         <TextInput
-          style={styles.input}
-          placeholder="Locality"
+          style={[styles.input, ]}
+          placeholder="   Locality"
           value={otherFormData.kinLocality}
           onChangeText={(value) => handleChangeLocal('kinLocality', value)}
         />
       </View>
       <View style={styles.inputGroup}>
         <TextInput
-          style={styles.input}
-          placeholder="City"
+          style={[styles.input, styles.halfWidth]}
+          placeholder="   City"
           value={otherFormData.kinCity}
           onChangeText={(value) => handleChangeLocal('kinCity', value)}
         />
         <TextInput
-          style={styles.input}
-          placeholder="District"
+          style={[styles.input, styles.halfWidth]}
+          placeholder="   District"
           value={otherFormData.kinDistrict}
           onChangeText={(value) => handleChangeLocal('kinDistrict', value)}
         />
       </View>
       <View style={styles.inputGroup}>
         <TextInput
-          style={styles.input}
-          placeholder="State"
+          style={[styles.input, styles.halfWidth]}
+          placeholder="   State"
           value={otherFormData.kinState}
           onChangeText={(value) => handleChangeLocal('kinState', value)}
         />
         <TextInput
-          style={styles.input}
-          placeholder="Pincode"
+          style={[styles.input, styles.halfWidth]}
+          placeholder="   Pincode"
           value={otherFormData.kinPincode}
           keyboardType="numeric"
           maxLength={6}
@@ -213,7 +284,7 @@ const MoreDetails = ({
 
       <TouchableOpacity
         style={[styles.submitButton, isDisabled && styles.disabledButton]}
-        onPress={handleSubmitChange}
+        onPress={registerFormSubmit}
         disabled={isDisabled}
       >
         <Text style={styles.submitButtonText}>Submit</Text>
@@ -248,18 +319,18 @@ const styles = StyleSheet.create({
     color: '#0198A5',
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
     marginTop: 16,
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginTop: 16,
+    marginTop: 18,
   },
   radioGroup: {
     flexDirection: 'row',
-    marginTop: 16,
+    marginTop: 4,
   },
   radioButton: {
     flexDirection: 'row',
@@ -269,27 +340,31 @@ const styles = StyleSheet.create({
   inputGroup: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 16,
+    marginTop: 2,
   },
   input: {
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: '#ccc',
     borderRadius: 25,
     padding: 8,
     marginTop: 8,
     width: '100%',
   },
+  halfWidth: {
+    width: '48%',
+  },
   picker: {
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: '#ccc',
     borderRadius: 25,
     marginTop: 8,
+    // color: '#ccc',
     width: '100%',
   },
   checkboxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 16,
+    marginTop: 13,
   },
   checkboxLabel: {
     marginLeft: 8,

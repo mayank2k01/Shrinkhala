@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Platform, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RadioButton } from 'react-native-paper';
@@ -72,6 +74,11 @@ const RegistrationForm = ({ phoneNumber, patientDetails, setPatientDetails }) =>
     handleChange('dob', currentDate.toISOString().split('T')[0]);
   };
 
+  const onDateChangeWeb = (selectedDate) => {
+    setDate(selectedDate);
+    handleChange('dob', selectedDate.toISOString().split('T')[0]);
+  };
+
   return (
     <View style={styles.wrapper}>
       <ScrollView contentContainerStyle={styles.container}>
@@ -123,10 +130,23 @@ const RegistrationForm = ({ phoneNumber, patientDetails, setPatientDetails }) =>
           />
         </View>
         <View style={styles.row}>
-          <TouchableOpacity onPress={showDatepicker} style={[styles.datePicker, styles.halfInput, styles.marginRight]}>
-            <Text>{formData.dob || 'Date of Birth'}</Text>
-          </TouchableOpacity>
-          {show && (
+          {Platform.OS === 'web' ? (
+            <DatePicker
+              selected={date}
+              onChange={onDateChangeWeb}
+              dateFormat="yyyy-MM-dd"
+              customInput={
+                <TouchableOpacity onPress={showDatepicker} style={[styles.datePicker, styles.halfInput, styles.marginRight]}>
+                  <Text>{formData.dob || 'Date of Birth'}</Text>
+                </TouchableOpacity>
+              }
+            />
+          ) : (
+            <TouchableOpacity onPress={showDatepicker} style={[styles.datePicker, styles.halfInput, styles.marginRight]}>
+              <Text>{formData.dob || 'Date of Birth'}</Text>
+            </TouchableOpacity>
+          )}
+          {show && Platform.OS !== 'web' && (
             <DateTimePicker
               testID="dateTimePicker"
               value={date}
