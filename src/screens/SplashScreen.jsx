@@ -1,15 +1,17 @@
-// components/Logo.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import backgroundImage from '../../assets/SplashScreen-bg.png';
 
 const Logo = () => {
   const navigation = useNavigation();
+  const [textVisible, setTextVisible] = useState(true);
 
   const handleLogoClick = () => {
-    // Navigate to the login or signup page
-    navigation.navigate('LoginOrSignUp');
+    setTextVisible(false);
+    setTimeout(() => {
+      navigation.navigate('LoginOrSignUp');
+    }, 3000);
   };
 
   return (
@@ -28,14 +30,14 @@ const Logo = () => {
 
 const styles = StyleSheet.create({
   backgroundImage: {
-    flex: 1, // Make the image cover the entire view
-    resizeMode: 'cover', // Stretch the image to fill the view (adjust as needed)
+    flex: 1,
+    resizeMode: 'cover',
     justifyContent: 'center',
     alignItems: 'center',
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(56, 178, 172, 0)', // Add transparency to see the background
+    backgroundColor: 'rgba(56, 178, 172, 0)',
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',

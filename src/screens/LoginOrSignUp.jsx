@@ -1,8 +1,10 @@
-// screens/LoginOrSignUp.js
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Logo from '../../assets/7317079.jpg'; // Make sure your logo image is in the correct path
+
+const { width, height } = Dimensions.get('window');
+const logoHeight = height * 0.4; // Adjust the height of the logo relative to the screen height
+const logoWidth = width * 0.8; // Adjust the width of the logo relative to the screen width
 
 const LoginOrSignUp = () => {
   const navigation = useNavigation();
@@ -14,7 +16,7 @@ const LoginOrSignUp = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handleLogoClick}>
-        <Image source={Logo} style={styles.logo} />
+        <Image source={require('../../assets/7317079.jpg')} style={styles.logo} />
       </TouchableOpacity>
       <View style={styles.nav}>
         <TouchableOpacity
@@ -45,8 +47,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   logo: {
-    width: '100vw', 
-    height: '70vh',
+    width: logoWidth,
+    height: logoHeight,
     resizeMode: 'contain',
     marginBottom: 20,
   },
@@ -71,7 +73,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    // backgroundColor: '#f0f0f0',
     height: 20,
   },
   footerText: {
