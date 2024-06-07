@@ -32,10 +32,19 @@ const RegistrationForm = ({ phoneNumber, patientDetails, setPatientDetails }) =>
     careFirstName: '',
     careLastName: '',
     careMobNo: '',
+    careRelation: ''
   });
 
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
+
+  const [isDisabled, setIsDisabled] = useState(true);
+
+// Example condition: Disable if username is empty
+  const handleCareTaker = () => {
+    if(formData.patientOrCaregiver==='patient')
+    setIsDisabled(false); // Disable if username is empty string
+  };
 
   const handleChange = (name, value) => {
     const newFormData = name === 'dob' ? { ...formData, [name]: value, age: calculateAge(value) } : { ...formData, [name]: value };
@@ -87,12 +96,13 @@ const RegistrationForm = ({ phoneNumber, patientDetails, setPatientDetails }) =>
         <Text>Please fill up the mandatory details to continue</Text>
         <Text style={styles.sectionTitle}>Patient's Details</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { color: 'grey' }]}
           placeholder="Mobile Number"
           keyboardType="numeric"
           maxLength={10}
           value={formData.mobileNumber}
           onChangeText={(value) => handleChange('mobileNumber', value)}
+          editable={false}
         />
         <Text>Whom does this number belong to:</Text>
         <View style={styles.radioContainer}>
@@ -136,14 +146,14 @@ const RegistrationForm = ({ phoneNumber, patientDetails, setPatientDetails }) =>
               onChange={onDateChangeWeb}
               dateFormat="yyyy-MM-dd"
               customInput={
-                <TouchableOpacity onPress={showDatepicker} style={[styles.datePicker, styles.halfInput, styles.marginRight]}>
+                <TouchableOpacity onPress={showDatepicker} style={[styles.datePicker, styles.halfInput, ]}>
                   <Text>{formData.dob || 'Date of Birth'}</Text>
                 </TouchableOpacity>
               }
             />
           ) : (
             <TouchableOpacity onPress={showDatepicker} style={[styles.datePicker, styles.halfInput, styles.marginRight]}>
-              <Text>{formData.dob || 'Date of Birth'}</Text>
+              <Text >{formData.dob || 'Date of Birth'}</Text>
             </TouchableOpacity>
           )}
           {show && Platform.OS !== 'web' && (
@@ -171,7 +181,7 @@ const RegistrationForm = ({ phoneNumber, patientDetails, setPatientDetails }) =>
               onValueChange={(value) => handleChange('gender', value)}
               style={styles.picker}
             >
-              <Picker.Item label="Gender" value="" />
+              <Picker.Item style={{color: 'grey'}} label="Gender" value="" />
               <Picker.Item label="Male" value="male" />
               <Picker.Item label="Female" value="female" />
               <Picker.Item label="Others" value="others" />
@@ -183,7 +193,7 @@ const RegistrationForm = ({ phoneNumber, patientDetails, setPatientDetails }) =>
               onValueChange={(value) => handleChange('maritalStatus', value)}
               style={styles.picker}
             >
-              <Picker.Item label="Marital Status" value="" />
+              <Picker.Item style={{color: 'grey'}} label="Marital Status" value="" />
               <Picker.Item label="Single" value="single" />
               <Picker.Item label="Married" value="married" />
               <Picker.Item label="Divorced" value="divorced" />
@@ -199,7 +209,7 @@ const RegistrationForm = ({ phoneNumber, patientDetails, setPatientDetails }) =>
           value={formData.alternateNumber}
           onChangeText={(value) => handleChange('alternateNumber', value)}
         />
-        <Text>Patient's Address</Text>
+        <Text style={{fontSize: width * 0.04,fontWeight: 'bold', marginTop: 20}}>Patient's Address</Text>
         <TextInput
           style={styles.input}
           placeholder="House No, Road or Street"
@@ -242,21 +252,20 @@ const RegistrationForm = ({ phoneNumber, patientDetails, setPatientDetails }) =>
           value={formData.state}
           onChangeText={(value) => handleChange('state', value)}
         />
-        <Text>Care Giver's Details</Text>
+        <Text style={{fontSize: 16,fontWeight: 'bold',marginTop: 20}}>Care Giver's Details</Text>
         <View style={styles.row}>
           <TextInput
             style={[styles.input, styles.halfInput, styles.marginRight]}
             placeholder="First Name"
             value={formData.careFirstName}
             onChangeText={(value) => handleChange('careFirstName', value)}
-            editable={formData.patientOrCaregiver === 'Care Giver'}
+            // editable={formData.patientOrCaregiver === 'patient'}
           />
           <TextInput
             style={[styles.input, styles.halfInput, styles.marginLeft]}
             placeholder="Last Name"
             value={formData.careLastName}
             onChangeText={(value) => handleChange('careLastName', value)}
-            editable={formData.patientOrCaregiver === 'Care Giver'}
           />
         </View>
         <TextInput
@@ -266,12 +275,33 @@ const RegistrationForm = ({ phoneNumber, patientDetails, setPatientDetails }) =>
           maxLength={10}
           value={formData.careMobNo}
           onChangeText={(value) => handleChange('careMobNo', value)}
-          editable={formData.patientOrCaregiver === 'Care Giver'}
+          editable={formData.patientOrCaregiver === 'patient'}
         />
+        <View style={styles.kpicker}>
+            <Picker
+              selectedValue={formData.careRelation}
+              // style={{borderWidth: 1,borderColor: '#ccc',borderRadius: 25,fontSize: 10}}
+              onValueChange={(itemValue, itemIndex) => handleChange('careRelation', itemValue)}
+            >
+              <Picker.Item style={{color: 'grey'}} label="Relationship with Care Giver" value="" />
+              <Picker.Item label="Spouse" value="spouse" />
+              <Picker.Item label="Son" value="son" />
+              <Picker.Item label="Daughter" value="daughter" />
+              <Picker.Item label="Cousin" value="cousin" />
+              <Picker.Item label="Brother-in-law" value="brotherInLaw" />
+              <Picker.Item label="Sister-in-law" value="sisterInLaw" />
+              <Picker.Item label="Father" value="father" />
+              <Picker.Item label="Mother" value="mother" />
+              <Picker.Item label="Brother" value="brother" />
+              <Picker.Item label="Sister" value="sister" />
+              <Picker.Item label="Friend" value="friend" />
+              <Picker.Item label="Other" value="other" />
+            </Picker>
+          </View>
       </ScrollView>
       <View style={styles.footer}>
         <TouchableOpacity style={styles.submitButton} onPress={registerFormSubmit}>
-          <Text style={styles.submitButtonText}>Submit</Text>
+          <Text style={styles.submitButtonText}>Save</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -300,12 +330,14 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     marginTop: width * 0.05,
+    fontSize: width * 0.04,
+    fontWeight: 'bold',
   },
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 50,
-    padding: width * 0.025,
+    borderRadius: 25, // Adjusted to be more rounded
+    padding: width * 0.03, // Adjusted for better touch target
     marginVertical: width * 0.025,
     flex: 1, // Ensure inputs take up available space to prevent overflow
   },
@@ -327,8 +359,9 @@ const styles = StyleSheet.create({
   datePicker: {
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 50,
-    padding: width * 0.025,
+    borderRadius: 25, // Adjusted to be more rounded
+    padding: width * 0.03, // Adjusted for better touch target
+    paddingHorizontal:12,
     marginVertical: width * 0.025,
     justifyContent: 'center',
     alignItems: 'center',
@@ -346,7 +379,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     height: width * 0.1,
-    marginTop: -5,
+    marginTop: -12,
   },
   footer: {
     padding: width * 0.05,
@@ -354,14 +387,21 @@ const styles = StyleSheet.create({
   },
   submitButton: {
     backgroundColor: '#0198A5',
-    borderRadius: 50,
-    paddingVertical: width * 0.025,
+    borderRadius: 25, // Adjusted to be more rounded
+    paddingVertical: width * 0.04, // Adjusted for better touch target
     alignItems: 'center',
   },
   submitButtonText: {
     color: '#fff',
-    fontSize: width * 0.04,
+    fontSize: width * 0.045, // Adjusted for better readability
     fontWeight: 'bold',
+  },
+  kpicker: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 25,
+    marginTop: 20,
+    width: '100%',
   },
 });
 

@@ -85,9 +85,9 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     flex: 1,
-    marginTop: 8,
-    marginHorizontal: 20,
-    paddingTop: 60,
+    // marginTop: 8,
+    // marginHorizontal: 20,
+    // paddingTop: 60,
   },
   header: {
     marginTop: 20,

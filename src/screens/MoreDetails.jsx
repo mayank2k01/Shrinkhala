@@ -114,10 +114,15 @@ const MoreDetails = ({
              p_city: formData.city,
              p_district: formData.district,
              address: formData.house+formData.locality+formData.state+formData.city+formData.district,
-             care_giver_first_name: otherFormData.otherFirstName,
-             care_giver_last_name: otherFormData.otherLastName,
-             care_giver_mobile_number: otherFormData.othermobileNumber,
-             care_giver_relation: otherFormData.caregiverOrOther,
+             care_giver_first_name: formData.careFirstName,
+             care_giver_last_name: formData.careLastName,
+             care_giver_mobile_number: formData.careMobNo,
+             care_giver_relation: formData.careRelation,
+             kin_first_name: otherFormData.otherFirstName,
+             kin_last_name: otherFormData.otherLastName,
+             kin_mobile_number: otherFormData.othermobileNumber,
+             kin_relation: otherFormData.otherRelation,
+             care_giver_or_other: otherFormData.caregiverOrOther,
              c_house_no: otherFormData.kinHouse,
              c_locality: otherFormData.kinLocality,
              c_pin_code: otherFormData.kinPincode,
@@ -206,25 +211,27 @@ const MoreDetails = ({
             value={otherFormData.othermobileNumber}
             onChangeText={(value) => handleChangeLocal('othermobileNumber', value)}
           />
-          <Picker
-            selectedValue={otherFormData.otherRelation}
-            style={styles.picker}
-            onValueChange={(itemValue, itemIndex) => handleChangeLocal('otherRelation', itemValue)}
-          >
-            <Picker.Item label="Relationship with Kin" value="" />
-            <Picker.Item label="Spouse" value="spouse" />
-            <Picker.Item label="Son" value="son" />
-            <Picker.Item label="Daughter" value="daughter" />
-            <Picker.Item label="Cousin" value="cousin" />
-            <Picker.Item label="Brother-in-law" value="brotherInLaw" />
-            <Picker.Item label="Sister-in-law" value="sisterInLaw" />
-            <Picker.Item label="Father" value="father" />
-            <Picker.Item label="Mother" value="mother" />
-            <Picker.Item label="Brother" value="brother" />
-            <Picker.Item label="Sister" value="sister" />
-            <Picker.Item label="Friend" value="friend" />
-            <Picker.Item label="Other" value="other" />
-          </Picker>
+          <View style={styles.picker}>
+            <Picker
+              selectedValue={otherFormData.otherRelation}
+              // style={{borderWidth: 1,borderColor: '#ccc',borderRadius: 25,fontSize: 10}}
+              onValueChange={(itemValue, itemIndex) => handleChangeLocal('otherRelation', itemValue)}
+            >
+              <Picker.Item style={{color: 'grey'}} label="Relationship with Kin" value="" />
+              <Picker.Item label="Spouse" value="spouse" />
+              <Picker.Item label="Son" value="son" />
+              <Picker.Item label="Daughter" value="daughter" />
+              <Picker.Item label="Cousin" value="cousin" />
+              <Picker.Item label="Brother-in-law" value="brotherInLaw" />
+              <Picker.Item label="Sister-in-law" value="sisterInLaw" />
+              <Picker.Item label="Father" value="father" />
+              <Picker.Item label="Mother" value="mother" />
+              <Picker.Item label="Brother" value="brother" />
+              <Picker.Item label="Sister" value="sister" />
+              <Picker.Item label="Friend" value="friend" />
+              <Picker.Item label="Other" value="other" />
+            </Picker>
+          </View>
         </View>
       )}
 
@@ -357,8 +364,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 25,
-    marginTop: 8,
-    // color: '#ccc',
+    marginTop: 10,
     width: '100%',
   },
   checkboxContainer: {
