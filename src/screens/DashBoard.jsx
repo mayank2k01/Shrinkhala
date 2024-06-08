@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialIcons } from '@expo/vector-icons';
 import backgroundImage from '../../assets/transparent-bg.png';
 import whiteimg from '../../assets/white.png';
+// import DocumentPicker from 'react-native-document-picker';
 
 const Dashboard = () => {
   const [userName, setUserName] = useState('');
@@ -56,6 +57,7 @@ const Dashboard = () => {
   const closeModal = () => {
     setShowModal(false);
   };
+
   const handleDownload = async (url) => {
     try {
       const supported = await Linking.canOpenURL(url);
@@ -69,27 +71,51 @@ const Dashboard = () => {
     }
   };
 
+  // const handleUploadReport = async () => {
+  //   try {
+  //     // Pick image or video from the library
+  //     const imageResult = await ImagePicker.launchImageLibraryAsync({
+  //       mediaTypes: ImagePicker.MediaTypeOptions.All,
+  //       allowsMultipleSelection: true,
+  //     });
+  
+  //     let selectedFiles = [];
+  
+  //     if (!imageResult.canceled) {
+  //       selectedFiles = imageResult.assets;
+  //     }
+  
+  //     // Pick PDF document
+  //     const documentResult = await DocumentPicker.pickMultiple({
+  //       type: [DocumentPicker.types.pdf],
+  //     });
+  
+  //     if (documentResult.length > 0) {
+  //       selectedFiles = [...selectedFiles, ...documentResult];
+  //     }
+  
+  //     if (selectedFiles.length > 0) {
+  //       closeModal();
+  //       navigation.navigate('Preview', { selectedFiles, userName });
+  //     }
+  //   } catch (error) {
+  //     if (DocumentPicker.isCancel(error)) {
+  //       // User cancelled the document picker
+  //     } else {
+  //       // Handle other errors
+  //       console.error(error);
+  //     }
+  //   }
+  // };
   const handleUploadReport = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsMultipleSelection: true,
     });
 
-    if (!result.cancelled) {
-      const { uri } = result;
-      const formData = new FormData();
-      formData.append('file', { uri, name: 'report.jpg', type: 'image/jpeg' });
-      formData.append('user_name', userName);
-
-      try {
-        await axios.post("http://34.16.227.186:5000/extract", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-
-        Alert.alert('Success', 'Image uploaded successfully');
-      } catch (error) {
-        console.error("Error uploading image:", error);
-      }
+    if (!result.canceled) {
+      closeModal();
+      navigation.navigate('Preview', { selectedFiles: result.assets, userName });
     }
   };
 
@@ -98,10 +124,12 @@ const Dashboard = () => {
       allowsEditing: false,
     });
 
-    if (!result.cancelled) {
-      handleUploadReport(result.uri);
+    if (!result.canceled) {
+      closeModal();
+      navigation.navigate('Preview', { selectedFiles: [result], userName });
     }
   };
+
   const getTestTypeColor = (testType) => {
     switch (testType) {
       case 'Blood':
@@ -114,7 +142,6 @@ const Dashboard = () => {
         return { textColor: '#000000', bgColor: '#FFFFFF' }; // Default text and background color
     }
   };
-
 
   const handleView = (url) => {
     navigation.navigate('ReportViewer', { url });
@@ -133,7 +160,6 @@ const Dashboard = () => {
   };
 
   return (
-
     <ImageBackground source={whiteimg} style={styles.backgroundImage}>
       <View style={styles.overlay}>
         <Text style={styles.title}>Medi.ai</Text>
@@ -144,12 +170,7 @@ const Dashboard = () => {
           <Text style={styles.userInfo}>Patient: {name}</Text>
           <Text style={styles.userInfo}>UID No: {userName}</Text>
         </View>
-        <View
-      style={{
-          borderBottomColor: 'black',
-          borderBottomWidth: StyleSheet.hairlineWidth,
-        }}
-      />
+        <View style={styles.divider} />
         <View style={styles.actionsContainer}>
           <TouchableOpacity style={styles.button} onPress={openModal}>
             <MaterialIcons name="cloud-upload" size={28} color="#0198A5" style={styles.icon} />
@@ -160,52 +181,47 @@ const Dashboard = () => {
             <Text style={styles.buttonText}>Share with Doctor</Text>
           </TouchableOpacity>
         </View>
-        <View
-          style={{
-            borderBottomColor: 'black',
-            borderBottomWidth: StyleSheet.hairlineWidth,
-          }}
-        />
+        <View style={styles.divider} />
         <ImageBackground source={backgroundImage}>
-        <View style={{paddingTop: 10}}>
-          <Text style={{fontSize: 20, }}>Your Reports</Text>
-        </View>
-        <View style={styles.filterContainer}>
-          <TouchableOpacity onPress={() => handleSpanClick("All")} style={[styles.filterButton, activeSpan === "All" && styles.activeFilter]}>
-            <Text style={styles.filterText}>All</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleSpanClick("Blood test")} style={[styles.filterButton, activeSpan === "Blood test" && styles.activeFilter]}>
-            <Text style={styles.filterText}>Blood test</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleSpanClick("Radiology")} style={[styles.filterButton, activeSpan === "Radiology" && styles.activeFilter]}>
-            <Text style={styles.filterText}>Radiology</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleSpanClick("Pathology")} style={[styles.filterButton, activeSpan === "Pathology" && styles.activeFilter]}>
-            <Text style={styles.filterText}>Pathology</Text>
-          </TouchableOpacity>
-        </View>
+          <View style={{ paddingTop: 10 }}>
+            <Text style={{ fontSize: 20, }}>Your Reports</Text>
+          </View>
+          <View style={styles.filterContainer}>
+            <TouchableOpacity onPress={() => handleSpanClick("All")} style={[styles.filterButton, activeSpan === "All" && styles.activeFilter]}>
+              <Text style={styles.filterText}>All</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleSpanClick("Blood test")} style={[styles.filterButton, activeSpan === "Blood test" && styles.activeFilter]}>
+              <Text style={styles.filterText}>Blood test</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleSpanClick("Radiology")} style={[styles.filterButton, activeSpan === "Radiology" && styles.activeFilter]}>
+              <Text style={styles.filterText}>Radiology</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleSpanClick("Pathology")} style={[styles.filterButton, activeSpan === "Pathology" && styles.activeFilter]}>
+              <Text style={styles.filterText}>Pathology</Text>
+            </TouchableOpacity>
+          </View>
 
           <FlatList
-              data={filteredReports}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item, index }) => (
-                  <View style={styles.reportItem}>
-                    <View style={styles.reportLeftContainer}>
-                      <Text style={styles.reportTitle}>Report Name: {item.test_name}</Text>
-                      <Text style={styles.reportSubtitle}>Test Type: {item.test_type}</Text>
-                      <TouchableOpacity style={styles.btn} onPress={() => handleDownload(item.unique_file_path_name)}>
-                        <Text style={styles.btnText}>Download</Text>
-                      </TouchableOpacity>
-                    </View>
-                    <View style={styles.reportRightContainer}>
-                      <Text style={[styles.testType, { backgroundColor: getTestTypeColor(item.test_type).bgColor, color: getTestTypeColor(item.test_type).textColor }]}>{item.test_type}</Text>
-                      <Text style={styles.reportDate}>{item.extracted_date}</Text>
-                      <TouchableOpacity style={styles.btnView} onPress={() => handleView(item.unique_file_path_name)} >
-                        <Text style={styles.btnViewColor}>View</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-              )}
+            data={filteredReports}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item, index }) => (
+              <View style={styles.reportItem}>
+                <View style={styles.reportLeftContainer}>
+                  <Text style={styles.reportTitle}>Report Name: {item.test_name}</Text>
+                  <Text style={styles.reportSubtitle}>Test Type: {item.test_type}</Text>
+                  <TouchableOpacity style={styles.btn} onPress={() => handleDownload(item.unique_file_path_name)}>
+                    <Text style={styles.btnText}>Download</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.reportRightContainer}>
+                  <Text style={[styles.testType, { backgroundColor: getTestTypeColor(item.test_type).bgColor, color: getTestTypeColor(item.test_type).textColor }]}>{item.test_type}</Text>
+                  <Text style={styles.reportDate}>{item.extracted_date}</Text>
+                  <TouchableOpacity style={styles.btnView} onPress={() => handleView(item.unique_file_path_name)} >
+                    <Text style={styles.btnViewColor}>View</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
           />
         </ImageBackground>
 
@@ -224,7 +240,6 @@ const Dashboard = () => {
             </TouchableOpacity>
           </View>
         </Modal>
-
       </View>
       <View style={styles.tabContainer}>
         <TouchableOpacity
@@ -253,7 +268,7 @@ const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
     resizeMode: 'contain',
-    height:100,
+    height: 100,
   },
   overlay: {
     flex: 1,
@@ -320,8 +335,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     color: "white"
   },
-  btnViewColor:{
-    color:'white'
+  btnViewColor: {
+    color: 'white'
   },
   btnText: {
     color: '#0198A5',
@@ -362,6 +377,10 @@ const styles = StyleSheet.create({
   reportDate: {
     fontSize: 13,
     marginTop: 5,
+  },
+  divider: {
+    borderBottomColor: 'black',
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
 });
 
