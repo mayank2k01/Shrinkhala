@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, StyleSheet, FlatList, TouchableOpacity, Modal, ImageBackground, Alert, Linking } from "react-native";
+import { View, Text, Button, StyleSheet, FlatList, TouchableOpacity, Modal, ImageBackground, Alert, Linking, SafeAreaView, ScrollView } from "react-native";
 import axios from "axios";
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
@@ -115,119 +115,126 @@ const Dashboard = () => {
   };
 
   const filteredReports = activeSpan === "All"
-    ? reports
-    : reports.filter(report => report.test_type === activeSpan || (activeSpan === "Blood test" && report.test_type_1 === "B"));
+      ? reports
+      : reports.filter(report => report.test_type === activeSpan || (activeSpan === "Blood test" && report.test_type_1 === "B"));
 
   const getInitials = (name) => {
     return name.split(" ").map(part => part.charAt(0)).join("").toUpperCase();
   };
 
   return (
-    <ImageBackground source={whiteimg} style={styles.backgroundImage}>
-      <View style={styles.overlay}>
-        <Text style={styles.title}>Medi.ai</Text>
-        <View style={styles.profileContainer}>
-          <View style={styles.circularIcon}>
-            <Text style={styles.initials}>{getInitials(name)}</Text>
-          </View>
-          <Text style={styles.userInfo}>Patient: {name}</Text>
-          <Text style={styles.userInfo}>UID No: {userName}</Text>
-        </View>
-        <View style={styles.divider} />
-        <View style={styles.actionsContainer}>
-          <TouchableOpacity style={styles.button} onPress={openModal}>
-            <MaterialIcons name="cloud-upload" size={28} color="#0198A5" style={styles.icon} />
-            <Text style={styles.buttonText}>Upload Report</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ShareReport')}>
-            <MaterialIcons name="share" size={24} color="#0198A5" style={styles.icon} />
-            <Text style={styles.buttonText}>Share with Doctor</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.divider} />
-        <ImageBackground source={backgroundImage}>
-          <View style={{ paddingTop: 10 }}>
-            <Text style={{ fontSize: 20, }}>Your Reports</Text>
-          </View>
-          <View style={styles.filterContainer}>
-            <TouchableOpacity onPress={() => handleSpanClick("All")} style={[styles.filterButton, activeSpan === "All" && styles.activeFilter]}>
-              <Text style={styles.filterText}>All</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleSpanClick("Blood test")} style={[styles.filterButton, activeSpan === "Blood test" && styles.activeFilter]}>
-              <Text style={styles.filterText}>Blood test</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleSpanClick("Radiology")} style={[styles.filterButton, activeSpan === "Radiology" && styles.activeFilter]}>
-              <Text style={styles.filterText}>Radiology</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleSpanClick("Pathology")} style={[styles.filterButton, activeSpan === "Pathology" && styles.activeFilter]}>
-              <Text style={styles.filterText}>Pathology</Text>
-            </TouchableOpacity>
-          </View>
-
-          <FlatList
-            data={filteredReports}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item, index }) => (
-              <View style={styles.reportItem}>
-                <View style={styles.reportLeftContainer}>
-                  <Text style={styles.reportTitle}>Report Name: {item.test_name}</Text>
-                  <Text style={styles.reportSubtitle}>Test Type: {item.test_type}</Text>
-                  <TouchableOpacity style={styles.btn} onPress={() => handleDownload(item.unique_file_path_name)}>
-                    <Text style={styles.btnText}>Download</Text>
-                  </TouchableOpacity>
+      <SafeAreaView style={styles.safeArea}>
+        <ImageBackground source={whiteimg} style={styles.backgroundImage}>
+          <ScrollView contentContainerStyle={styles.scrollViewContent}>
+            <View style={styles.overlay}>
+              <Text style={styles.title}>Medi.ai</Text>
+              <View style={styles.profileContainer}>
+                <View style={styles.circularIcon}>
+                  <Text style={styles.initials}>{getInitials(name)}</Text>
                 </View>
-                <View style={styles.reportRightContainer}>
-                  <Text style={[styles.testType, { backgroundColor: getTestTypeColor(item.test_type).bgColor, color: getTestTypeColor(item.test_type).textColor }]}>{item.test_type}</Text>
-                  <Text style={styles.reportDate}>{item.extracted_date}</Text>
-                  <TouchableOpacity style={styles.btnView} onPress={() => handleView(item.unique_file_path_name)} >
-                    <Text style={styles.btnViewColor}>View</Text>
-                  </TouchableOpacity>
-                </View>
+                <Text style={styles.userInfo}>Patient: {name}</Text>
+                <Text style={styles.userInfo}>UID No: {userName}</Text>
               </View>
-            )}
-          />
-        </ImageBackground>
-
-        <Modal visible={showModal} transparent={true} animationType="slide">
-          <View style={styles.modalContainer}>
-            <TouchableOpacity style={styles.modalClose} onPress={closeModal}>
-              <Text style={styles.modalCloseText}>&times;</Text>
+              <View style={styles.divider} />
+              <View style={styles.actionsContainer}>
+                <TouchableOpacity style={styles.button} onPress={openModal}>
+                  <MaterialIcons name="cloud-upload" size={28} color="#0198A5" style={styles.icon} />
+                  <Text style={styles.buttonText}>Upload Report</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ShareReport')}>
+                  <MaterialIcons name="share" size={24} color="#0198A5" style={styles.icon} />
+                  <Text style={styles.buttonText}>Share with Doctor</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.divider} />
+              <ImageBackground source={backgroundImage}>
+                <View style={{ paddingTop: 10 }}>
+                  <Text style={{ fontSize: 20, }}>Your Reports</Text>
+                </View>
+                <View style={styles.filterContainer}>
+                  <TouchableOpacity onPress={() => handleSpanClick("All")} style={[styles.filterButton, activeSpan === "All" && styles.activeFilter]}>
+                    <Text style={styles.filterText}>All</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => handleSpanClick("Blood test")} style={[styles.filterButton, activeSpan === "Blood test" && styles.activeFilter]}>
+                    <Text style={styles.filterText}>Blood test</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => handleSpanClick("Radiology")} style={[styles.filterButton, activeSpan === "Radiology" && styles.activeFilter]}>
+                    <Text style={styles.filterText}>Radiology</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => handleSpanClick("Pathology")} style={[styles.filterButton, activeSpan === "Pathology" && styles.activeFilter]}>
+                    <Text style={styles.filterText}>Pathology</Text>
+                  </TouchableOpacity>
+                </View>
+                <FlatList
+                    data={filteredReports}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item, index }) => (
+                        <View style={styles.reportItem}>
+                          <View style={styles.reportLeftContainer}>
+                            <Text style={styles.reportTitle}>Report Name: {item.test_name}</Text>
+                            <Text style={styles.reportSubtitle}>Test Type: {item.test_type}</Text>
+                            <TouchableOpacity style={styles.btn} onPress={() => handleDownload(item.unique_file_path_name)}>
+                              <Text style={styles.btnText}>Download</Text>
+                            </TouchableOpacity>
+                          </View>
+                          <View style={styles.reportRightContainer}>
+                            <Text style={[styles.testType, { backgroundColor: getTestTypeColor(item.test_type).bgColor, color: getTestTypeColor(item.test_type).textColor }]}>{item.test_type}</Text>
+                            <Text style={styles.reportDate}>{item.extracted_date}</Text>
+                            <TouchableOpacity style={styles.btnView} onPress={() => handleView(item.unique_file_path_name)} >
+                              <Text style={styles.btnViewColor}>View</Text>
+                            </TouchableOpacity>
+                          </View>
+                        </View>
+                    )}
+                    contentContainerStyle={{ paddingBottom: 70 }} // Ensures the list doesn't get hidden behind the tab
+                />
+              </ImageBackground>
+              <Modal visible={showModal} transparent={true} animationType="slide">
+                <View style={styles.modalContainer}>
+                  <TouchableOpacity style={styles.modalClose} onPress={closeModal}>
+                    <Text style={styles.modalCloseText}>&times;</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.modalTitle}>Upload a new Report</Text>
+                  <TouchableOpacity style={styles.uploadButton} onPress={handleUploadReport}>
+                    <Text style={styles.uploadButtonText}>From Phone</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.orText}>OR</Text>
+                  <TouchableOpacity style={styles.uploadButton} onPress={handleCaptureImage}>
+                    <Text style={styles.uploadButtonText}>Scan report</Text>
+                  </TouchableOpacity>
+                </View>
+              </Modal>
+            </View>
+          </ScrollView>
+          <View style={styles.tabContainer}>
+            <TouchableOpacity
+                style={styles.tab}
+                onPress={() => {
+                  setActiveTab('Profile');
+                  navigation.navigate('Profile');
+                }}
+            >
+              <MaterialIcons name="person" size={30} color={activeTab === 'Profile' ? '#0198A5' : 'grey'} />
+              <Text style={[styles.tabText, activeTab === 'Profile' && styles.activeTabText]}>Profile</Text>
             </TouchableOpacity>
-            <Text style={styles.modalTitle}>Upload a new Report</Text>
-            <TouchableOpacity style={styles.uploadButton} onPress={handleUploadReport}>
-              <Text style={styles.uploadButtonText}>From Phone</Text>
-            </TouchableOpacity>
-            <Text style={styles.orText}>OR</Text>
-            <TouchableOpacity style={styles.uploadButton} onPress={handleCaptureImage}>
-              <Text style={styles.uploadButtonText}>Scan report</Text>
+            <TouchableOpacity
+                style={styles.tab}
+                onPress={() => setActiveTab('Home')}
+            >
+              <MaterialIcons name="home" size={30} color={activeTab === 'Home' ? '#0198A5' : 'grey'} />
+              <Text style={[styles.tabText, activeTab === 'Home' && styles.activeTabText]}>Home</Text>
             </TouchableOpacity>
           </View>
-        </Modal>
-      </View>
-      <View style={styles.tabContainer}>
-        <TouchableOpacity
-          style={styles.tab}
-          onPress={() => {
-            setActiveTab('Profile');
-            navigation.navigate('Profile');
-          }}
-        >
-          <MaterialIcons name="person" size={30} color={activeTab === 'Profile' ? '#0198A5' : 'grey'} />
-          <Text style={[styles.tabText, activeTab === 'Profile' && styles.activeTabText]}>Profile</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.tab}
-          onPress={() => setActiveTab('Home')}
-        >
-          <MaterialIcons name="home" size={30} color={activeTab === 'Home' ? '#0198A5' : 'grey'} />
-          <Text style={[styles.tabText, activeTab === 'Home' && styles.activeTabText]}>Home</Text>
-        </TouchableOpacity>
-      </View>
-    </ImageBackground>
+        </ImageBackground>
+      </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+      marginTop: 10+15
+  },
   backgroundImage: {
     flex: 1,
     resizeMode: 'contain',
@@ -237,6 +244,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(255, 255, 255, 1)',
     padding: 5,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    paddingBottom: 70,
   },
   container: { flex: 1, padding: 20 },
   title: { fontSize: 24, fontWeight: 'bold', color: '#0198A5' },
