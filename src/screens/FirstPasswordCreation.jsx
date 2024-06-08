@@ -32,29 +32,29 @@ const FirstPasswordCreation = () => {
     const handleSubmit = async () => {
         if (password === confirmPassword) {
             const { userName, phoneNumber } = await getUserData();
-            // try {
-            //     const response = await fetch('http://34.131.227.229:8081/patient/password', {
-            //         method: 'POST',
-            //         headers: {
-            //             'Content-Type': 'application/json',
-            //         },
-            //         body: JSON.stringify({
-            //             user_id: userName,
-            //             phone_number: phoneNumber,
-            //             password: password,
-            //         }),
-            //     });
-            //     if (response.ok) {
-            //         navigation.navigate('Dashboard');
-            //     } else {
-            //         console.error('Error:', response.statusText);
-            //         Alert.alert('Error', 'Failed to save the password');
-            //     }
-            // } catch (error) {
-            //     console.error('Error:', error);
-            //     Alert.alert('Error', 'Failed to save the password');
-            // }
-            navigation.navigate('Dashboard');//when not connected to backend
+            try {
+                const response = await fetch('http://34.131.227.229:8081/patient/password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_id: userName,
+                        phone_number: phoneNumber,
+                        password: password,
+                    }),
+                });
+                if (response.ok) {
+                    navigation.navigate('Dashboard');
+                } else {
+                    console.error('Error:', response.statusText);
+                    Alert.alert('Error', 'Failed to save the password');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                Alert.alert('Error', 'Failed to save the password');
+            }
+            // navigation.navigate('Dashboard');//when not connected to backend
         } else {
             setPasswordsMatch(false);
         }

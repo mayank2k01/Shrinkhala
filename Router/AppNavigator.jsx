@@ -1,6 +1,6 @@
 // navigation/AppNavigator.jsx
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Logo from '../src/screens/SplashScreen';
 import LoginOrSignUp from '../src/screens/LoginOrSignUp';
@@ -22,6 +22,15 @@ const Stack = createNativeStackNavigator();
 const AppNavigator = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [patientDetails, setPatientDetails] = useState({});
+    // const [initialRoute, setInitialRoute] = useState('Home');
+
+    // useEffect(() => {
+    //   const determineInitialRoute = async () => {
+    //     const currentScreen = await getCurrentScreen();
+    //     setInitialRoute(currentScreen);
+    //   };
+    //   determineInitialRoute();
+    // }, []);
 
   return (
 

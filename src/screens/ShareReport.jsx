@@ -18,11 +18,20 @@ const ShareReport = () => {
     const [doctorsList, setDoctorsList] = useState([]);
 
     useEffect(() => {
-        const username = AsyncStorage.getItem('userName');
-        if (username) {
-            setUserName(username);
-        }
-    }, []);
+        const fetchUserName = async () => {
+          try {
+            const username = await AsyncStorage.getItem('userName');
+            if (username) {
+              setUserName(username);
+            }
+            console.log("Fetched username:", username);
+          } catch (error) {
+            console.error('Failed to fetch username from AsyncStorage', error);
+          }
+        };
+    
+        fetchUserName();
+      }, []);
 
     const handleBack = () => {
         navigation.goBack();
@@ -113,6 +122,7 @@ const ShareReport = () => {
     };
 
     const handleGenerateOTP = () => {
+        console.log('userName---',userName);
         fetch('http://34.131.227.229:8081/patient/generate_otp', {
             method: 'POST',
             headers: {

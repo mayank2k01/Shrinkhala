@@ -2,16 +2,29 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import backgroundImage from '../../assets/SplashScreen-bg.png';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Logo = () => {
   const navigation = useNavigation();
   const [textVisible, setTextVisible] = useState(true);
 
+  // const nav= () => {
+  //   const user=AsyncStorage.getItem('userName');
+  //   if(user==='') navigation.navigate('LoginOrSignUp');
+  //   else navigation.navigate('Dashboard');
+  // }
+
   const handleLogoClick = () => {
     setTextVisible(false);
-    setTimeout(() => {
+    const username=AsyncStorage.getItem('userName');
+    if (username) {
+      navigation.navigate('Dashboard');
+    } else {
       navigation.navigate('LoginOrSignUp');
-    }, 3000);
+    }
+    // setTimeout(() => {
+    //   nav
+    // }, 3000);
   };
 
   return (

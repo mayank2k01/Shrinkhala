@@ -143,7 +143,7 @@ const MoreDetails = ({
         .then(data => {
           AsyncStorage.setItem('userName', data.userName);
           // Use data.userName instead of response.userName here
-          navigation.navigate('/FirstPasswordCreation');
+          navigation.navigate('FirstPasswordCreation');
           console.log(data);
         })
         .catch(error => {

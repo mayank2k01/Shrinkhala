@@ -20,7 +20,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const getUserInfo = async () => {
-      const username = 'SuKu45675'; // replace this with actual async storage call if needed
+      const username = await AsyncStorage.getItem('userName'); // replace this with actual async storage call if needed
       if (username) {
         setUserName(username);
       }
