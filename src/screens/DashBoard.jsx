@@ -218,7 +218,7 @@ const Dashboard = () => {
           <MaterialIcons name="home" size={30} color={activeTab === 'Home' ? '#0198A5' : 'grey'} />
           <Text style={[styles.tabText, activeTab === 'Home' && styles.activeTabText]}>Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.tab}
           onPress={() => {
             setActiveTab('Notification');
@@ -227,7 +227,7 @@ const Dashboard = () => {
         >
           <MaterialIcons name="notifications" size={30} color={activeTab === 'Notification' ? '#0198A5' : 'grey'} />
           <Text style={[styles.tabText, activeTab === 'Notification' && styles.activeTabText]}>Notification</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </ImageBackground>
   );
