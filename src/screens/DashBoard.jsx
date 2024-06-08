@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, StyleSheet, FlatList, TouchableOpacity, Modal, ImageBackground, Alert } from "react-native";
+import { View, Text, Button, StyleSheet, FlatList, TouchableOpacity, Modal, ImageBackground, Alert, Linking } from "react-native";
 import axios from "axios";
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
@@ -56,6 +56,18 @@ const Dashboard = () => {
   const closeModal = () => {
     setShowModal(false);
   };
+  const handleDownload = async (url) => {
+    try {
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        Alert.alert(`Don't know how to open this URL: ${url}`);
+      }
+    } catch (error) {
+      console.error('Error downloading report:', error);
+    }
+  };
 
   const handleUploadReport = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -90,6 +102,19 @@ const Dashboard = () => {
       handleUploadReport(result.uri);
     }
   };
+  const getTestTypeColor = (testType) => {
+    switch (testType) {
+      case 'Blood':
+        return { textColor: '#F1416C', bgColor: '#F1416C1A' };
+      case 'Radiology':
+        return { textColor: '#01A52F', bgColor: '#01A52F1A' };
+      case 'Pathology':
+        return { textColor: '#278AE6', bgColor: '#278AE61A' };
+      default:
+        return { textColor: '#000000', bgColor: '#FFFFFF' }; // Default text and background color
+    }
+  };
+
 
   const handleView = (url) => {
     navigation.navigate('ReportViewer', { url });
@@ -108,7 +133,7 @@ const Dashboard = () => {
   };
 
   return (
-    
+
     <ImageBackground source={whiteimg} style={styles.backgroundImage}>
       <View style={styles.overlay}>
         <Text style={styles.title}>Medi.ai</Text>
@@ -160,27 +185,28 @@ const Dashboard = () => {
           </TouchableOpacity>
         </View>
 
-        <FlatList
-          data={filteredReports}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item, index }) => (
-            <View style={styles.reportItem}>
-              <View style={styles.reportInfo}>
-                <Text style={styles.reportTitle}>Report Name: {index + 1}</Text>
-                <Text style={{fontSize: 13}}>Test Type: {item.test_name}</Text>
-                <Text style={{fontSize: 13}}>Date: {item.extracted_date}</Text>
-              </View>
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.btn} onPress={() => handleDownload(item.unique_file_path_name)} >
-                  <Text style={styles.btnText}>  Download  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.btn} onPress={() => handleView(item.unique_file_path_name)} >
-                <Text style={styles.btnText}>  View  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-        />
+          <FlatList
+              data={filteredReports}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item, index }) => (
+                  <View style={styles.reportItem}>
+                    <View style={styles.reportLeftContainer}>
+                      <Text style={styles.reportTitle}>Report Name: {item.test_name}</Text>
+                      <Text style={styles.reportSubtitle}>Test Type: {item.test_type}</Text>
+                      <TouchableOpacity style={styles.btn} onPress={() => handleDownload(item.unique_file_path_name)}>
+                        <Text style={styles.btnText}>Download</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View style={styles.reportRightContainer}>
+                      <Text style={[styles.testType, { backgroundColor: getTestTypeColor(item.test_type).bgColor, color: getTestTypeColor(item.test_type).textColor }]}>{item.test_type}</Text>
+                      <Text style={styles.reportDate}>{item.extracted_date}</Text>
+                      <TouchableOpacity style={styles.btnView} onPress={() => handleView(item.unique_file_path_name)} >
+                        <Text style={styles.btnViewColor}>View</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+              )}
+          />
         </ImageBackground>
 
         <Modal visible={showModal} transparent={true} animationType="slide">
@@ -198,7 +224,7 @@ const Dashboard = () => {
             </TouchableOpacity>
           </View>
         </Modal>
-        
+
       </View>
       <View style={styles.tabContainer}>
         <TouchableOpacity
@@ -218,16 +244,6 @@ const Dashboard = () => {
           <MaterialIcons name="home" size={30} color={activeTab === 'Home' ? '#0198A5' : 'grey'} />
           <Text style={[styles.tabText, activeTab === 'Home' && styles.activeTabText]}>Home</Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity
-          style={styles.tab}
-          onPress={() => {
-            setActiveTab('Notification');
-            navigation.navigate('Notification');
-          }}
-        >
-          <MaterialIcons name="notifications" size={30} color={activeTab === 'Notification' ? '#0198A5' : 'grey'} />
-          <Text style={[styles.tabText, activeTab === 'Notification' && styles.activeTabText]}>Notification</Text>
-        </TouchableOpacity> */}
       </View>
     </ImageBackground>
   );
@@ -236,7 +252,8 @@ const Dashboard = () => {
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
-    resizeMode: 'cover',
+    resizeMode: 'contain',
+    height:100,
   },
   overlay: {
     flex: 1,
@@ -257,9 +274,7 @@ const styles = StyleSheet.create({
   filterButton: { padding: 10, borderRadius: 18, backgroundColor: '#e0e0e0' },
   activeFilter: { backgroundColor: '#0198A5' },
   filterText: { color: 'white', fontSize: 16 },
-  reportItem: { flexDirection: 'column', justifyContent: 'space-between', padding: 10, marginVertical: 5, borderWidth: 1, borderColor: '#ddd', borderRadius: 10, backgroundColor: 'white' },
   reportInfo: { marginBottom: 10 },
-  reportTitle: { fontWeight: 'bold' },
   buttonContainer: { flexDirection: 'row', justifyContent: 'space-between' },
   modalContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' },
   modalClose: { position: 'absolute', top: 40, right: 20 },
@@ -273,7 +288,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     borderTopWidth: 1,
     borderTopColor: '#ddd',
-    paddingVertical: 10,
+    paddingVertical: 0,
     backgroundColor: '#fff',
     position: 'absolute',
     bottom: 0,
@@ -293,11 +308,61 @@ const styles = StyleSheet.create({
   btn: {
     backgroundColor: '#e6f6f6',
     borderRadius: 15,
-    padding: 4
+    padding: 6,
+    width: 100,
+    alignItems: "center"
+  },
+  btnView: {
+    backgroundColor: '#0198A5',
+    borderRadius: 15,
+    padding: 6,
+    width: 60,
+    alignItems: "center",
+    color: "white"
+  },
+  btnViewColor:{
+    color:'white'
   },
   btnText: {
     color: '#0198A5',
-  }
+  },
+  reportItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 10,
+    marginVertical: 5,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 10,
+    backgroundColor: 'white',
+  },
+  testType: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 5,
+  },
+  reportLeftContainer: {
+    flex: 1,
+  },
+  reportRightContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  reportTitle: {
+    fontWeight: 'bold',
+  },
+  reportSubtitle: {
+    fontSize: 13,
+    marginTop: 5,
+  },
+  reportDate: {
+    fontSize: 13,
+    marginTop: 5,
+  },
 });
 
 export default Dashboard;
