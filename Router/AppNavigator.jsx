@@ -35,7 +35,7 @@ const AppNavigator = () => {
   return (
 
       <Stack.Navigator initialRouteName="Home">
-         <Stack.Screen name="Home" component={Logo}           options={{ headerShown: false }}/>
+         <Stack.Screen name="Home" component={Logo}  options={{ headerShown: false }}/>
          <Stack.Screen name="LoginOrSignUp" component={LoginOrSignUp} />
          <Stack.Screen name="LoginPage" component={LoginPage} />
          <Stack.Screen name="SignUp">
@@ -61,7 +61,7 @@ const AppNavigator = () => {
          <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
          <Stack.Screen name="ForgetOtpScreen" component={ForgetOtpScreen} />
          <Stack.Screen name="CreateNewPassword" component={CreateNewPassword} />
-         <Stack.Screen name="Dashboard" component={Dashboard} />
+         <Stack.Screen name="Dashboard" component={Dashboard} options={{ headerShown: false }} />
          <Stack.Screen name="ShareReport" component={ShareReport} />
          {/* <Stack.Screen name="ReportViewer" component={ReportViewer} /> */}
       </Stack.Navigator>
