@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Button, StyleSheet, FlatList, TouchableOpacity, Modal, ImageBackground, Alert, Linking, SafeAreaView, ScrollView } from "react-native";
 import axios from "axios";
 import * as ImagePicker from 'expo-image-picker';
+// import * as DocumentPicker from 'expo-document-picker';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -12,6 +13,8 @@ const Dashboard = () => {
   const [userName, setUserName] = useState('');
   const [name, setName] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+
   const [reports, setReports] = useState([]);
   const [activeSpan, setActiveSpan] = useState("All");
   const [activeTab, setActiveTab] = useState('Home');
@@ -69,8 +72,16 @@ const Dashboard = () => {
       console.error('Error downloading report:', error);
     }
   };
+  const handleUploadOption = () => {
+    setShowUploadModal(true);
+  };
+  const handleUploadPDFReport = () => {
+    // Handle PDF upload logic
+    setShowModal(false);
+    // Your logic to handle PDF upload
+  };
 
-  const handleUploadReport = async () => {
+  const handleUploadImageReport = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsMultipleSelection: true,
@@ -191,20 +202,41 @@ const Dashboard = () => {
               </ImageBackground>
               <Modal visible={showModal} transparent={true} animationType="slide">
                 <View style={styles.modalContainer}>
+                  <View style={styles.modalContent}>
+                    <TouchableOpacity style={styles.modalClose} onPress={closeModal}>
+                      <Text style={styles.modalCloseText}>&times;</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.modalTitle}>Upload a new Report</Text>
+                    <TouchableOpacity style={styles.uploadButton} onPress={handleUploadOption}>
+                      <Text style={styles.uploadButtonText}>From Phone</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.orText}>OR</Text>
+                    <TouchableOpacity style={styles.uploadButton} onPress={handleCaptureImage}>
+                      <Text style={styles.uploadButtonText}>Scan report</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </Modal>
+
+            </View>
+
+            <Modal visible={showModal} transparent={true} animationType="slide">
+              <View style={styles.customModalContainer}>
+                <View style={styles.customModalContent}>
+                  <Text style={styles.modalTitle}>Select Upload Type</Text>
+                  <TouchableOpacity onPress={handleUploadPDFReport} style={styles.uploadOption}>
+                    <Text style={styles.uploadOptionText}>Upload PDF</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleUploadImageReport} style={[styles.uploadOption, styles.lastUploadOption]}>
+                    <Text style={styles.uploadOptionText}>Upload Image</Text>
+                  </TouchableOpacity>
                   <TouchableOpacity style={styles.modalClose} onPress={closeModal}>
                     <Text style={styles.modalCloseText}>&times;</Text>
                   </TouchableOpacity>
-                  <Text style={styles.modalTitle}>Upload a new Report</Text>
-                  <TouchableOpacity style={styles.uploadButton} onPress={handleUploadReport}>
-                    <Text style={styles.uploadButtonText}>From Phone</Text>
-                  </TouchableOpacity>
-                  <Text style={styles.orText}>OR</Text>
-                  <TouchableOpacity style={styles.uploadButton} onPress={handleCaptureImage}>
-                    <Text style={styles.uploadButtonText}>Scan report</Text>
-                  </TouchableOpacity>
                 </View>
-              </Modal>
-            </View>
+              </View>
+            </Modal>
+
           </ScrollView>
           <View style={styles.tabContainer}>
             <TouchableOpacity
@@ -266,12 +298,7 @@ const styles = StyleSheet.create({
   reportInfo: { marginBottom: 10 },
   buttonContainer: { flexDirection: 'row', justifyContent: 'space-between' },
   modalContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' },
-  modalClose: { position: 'absolute', top: 40, right: 20 },
-  modalCloseText: { fontSize: 24, color: 'white' },
-  modalTitle: { fontSize: 20, marginBottom: 20, color: 'white' },
-  uploadButton: { backgroundColor: '#0198A5', padding: 15, borderRadius: 10, marginVertical: 10 },
-  uploadButtonText: { color: 'white', fontSize: 16 },
-  orText: { color: 'white', marginVertical: 20 },
+
   tabContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -355,6 +382,67 @@ const styles = StyleSheet.create({
   divider: {
     borderBottomColor: 'black',
     borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  modalContent: {
+    backgroundColor: 'white', // White background for modal content
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+  },
+  modalClose: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+  },
+  modalCloseText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  modalTitle: {
+    marginTop: 10,
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  uploadButton: {
+    backgroundColor: '#0198A5',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  uploadButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  orText: {
+    fontSize: 16,
+    marginVertical: 10,
+  },
+  customModalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  customModalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+  },
+  uploadOption: {
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  lastUploadOption: {
+    borderBottomWidth: 0, // Remove border bottom for the last option
+  },
+  uploadOptionText: {
+    fontSize: 16,
+    textAlign: 'center',
   },
 });
 

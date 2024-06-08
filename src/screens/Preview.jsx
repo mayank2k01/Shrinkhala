@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, Alert, Dimensions, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, Alert, Dimensions } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
-import axios from 'axios';
 
 const screenWidth = Dimensions.get('window').width; // Get screen width for dynamic sizing
 
@@ -13,63 +12,66 @@ const Preview = () => {
 
   const handleUpload = async () => {
     const formData = new FormData();
-
-    for (const [index, file] of selectedFiles.entries()) {
-      const response = await fetch(file.uri);
-      const blob = await response.blob();
-
-      const uriParts = file.uri.split('.');
-      const fileType = uriParts[uriParts.length - 1];
-
-      formData.append('files', blob, `file${index}.${fileType}`);
-    }
-
     formData.append('user_name', userName);
 
     try {
-      await axios.post("http://34.16.227.186:5000/extract", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      for (const [index, file] of selectedFiles.entries()) {
+        const response = await fetch(file.uri);
+        const blob = await response.blob();
+        const fileName = file.uri.split('/').pop() || `file${index}`;
+        const fileBlob = new Blob([blob], { type: file.type || 'image/jpeg' });
+
+        formData.append('file', fileBlob, fileName);
+      }
+
+      const response = await fetch("http://34.16.227.186:5000/extract", {
+        method: 'POST',
+        body: formData,
       });
 
-      Alert.alert('Success', 'Files uploaded successfully');
-      navigation.navigate('Dashboard'); // Navigate back to dashboard after upload
+      if (response.ok) {
+        Alert.alert('Success', 'Files uploaded successfully');
+        navigation.navigate('Dashboard'); // Navigate back to dashboard after upload
+      } else {
+        throw new Error('Upload failed');
+      }
     } catch (error) {
       console.error("Error uploading files:", error);
       Alert.alert('Upload Error', 'There was an issue uploading the files.');
     }
   };
 
-  const renderItem = ({ item, index }) => {
+  const renderItem = ({ item }) => {
     return (
-      <View style={styles.fileContainer}>
-        {item.type === 'application/pdf' ? (
-          <TouchableOpacity
-            style={styles.previewButton}
-            onPress={() => navigation.navigate('PreviewPDF', { uri: item.uri })}
-          >
-            <MaterialIcons name="picture-as-pdf" size={100} color="red" />
-            <Text>PDF File</Text>
-          </TouchableOpacity>
-        ) : (
-          <Image source={{ uri: item.uri }} style={styles.image} resizeMode="contain" />
-        )}
-      </View>
+        <View style={styles.fileContainer}>
+          {item.type === 'application/pdf' ? (
+              <TouchableOpacity
+                  style={styles.previewButton}
+                  onPress={() => navigation.navigate('PreviewPDF', { uri: item.uri })}
+              >
+                <MaterialIcons name="picture-as-pdf" size={100} color="red" />
+                <Text>PDF File</Text>
+              </TouchableOpacity>
+          ) : (
+              <Image source={{ uri: item.uri }} style={styles.image} resizeMode="contain" />
+          )}
+        </View>
     );
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Preview Selected Files</Text>
-      <FlatList
-        data={selectedFiles}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={renderItem}
-        contentContainerStyle={styles.flatListContent} // Align items in a column
-      />
-      <TouchableOpacity style={styles.uploadButton} onPress={handleUpload}>
-        <Text style={styles.uploadButtonText}>Upload Files</Text>
-      </TouchableOpacity>
-    </View>
+      <View style={styles.container}>
+        <Text style={styles.title}>Preview Selected Files</Text>
+        <FlatList
+            data={selectedFiles}
+            keyExtractor={(_, index) => index.toString()}
+            renderItem={renderItem}
+            contentContainerStyle={styles.flatListContent} // Align items in a column
+        />
+        <TouchableOpacity style={styles.uploadButton} onPress={handleUpload}>
+          <Text style={styles.uploadButtonText}>Upload Files</Text>
+        </TouchableOpacity>
+      </View>
   );
 };
 
@@ -98,12 +100,12 @@ const styles = StyleSheet.create({
   },
   removeButton: { marginTop: 10 }, // Adjust position
   previewButton: { alignItems: 'center', justifyContent: 'center' },
-  uploadButton: { 
-    backgroundColor: '#0198A5', 
-    padding: 15, 
-    borderRadius: 10, 
-    alignItems: 'center', 
-    marginTop: 20 
+  uploadButton: {
+    backgroundColor: '#0198A5',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 20
   },
   uploadButtonText: { color: 'white', fontSize: 16 },
 });
