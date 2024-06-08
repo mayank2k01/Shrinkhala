@@ -24,37 +24,37 @@ const LoginPage = () => {
 
   const handleSubmit = () => {
     setErrorMsg("");
-    // if (!userId || !password) {
-    //   setErrorMsg("Please Enter UserId & Password");
-    // } else {
-    //   const apiUrl = loginMethod === 'mobile' ? 'http://34.131.227.229:8081/patient/signin_phone' : 'http://34.131.227.229:8081/patient/login_uuid';
-    //   const payload = loginMethod === 'mobile' ? { phone_number: userId, password: password } : { user_id: userId, password: password };
-
-    //   fetch(apiUrl, {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(payload),
-    //     referrerPolicy: 'strict-origin-when-cross-origin'
-    //   })
-    //   .then(response => {
-    //     if (!response.ok) {
-    //       throw new Error('Network response was not ok');
-    //     }
-    //     return response.json();
-    //   })
-    //   .then(data => {
+    if (!userId || !password) {
+      setErrorMsg("Please Enter UserId & Password");
+    } else {
+      const apiUrl = loginMethod === 'mobile' ? 'http://34.131.227.229:8081/patient/signin_phone' : 'http://34.131.227.229:8081/patient/login_uuid';
+      const payload = loginMethod === 'mobile' ? { phone_number: userId, password: password } : { user_id: userId, password: password };
+      console.log(apiUrl+' '+payload);
+      fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload),
+        referrerPolicy: 'strict-origin-when-cross-origin'
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
         // Handle successful login response
         navigation.navigate('Dashboard'); // Navigate to dashboard upon successful login
     //     console.log(data);
-    //   })
-    //   .catch(error => {
-    //     // Handle error
-    //     setErrorMsg("Phone Number or Password is incorrect");
-    //     console.error('There was a problem with the login request:', error);
-    //   });
-    // }
+      })
+      .catch(error => {
+        // Handle error
+        setErrorMsg("Phone Number/UserID or Password is incorrect");
+        console.error('There was a problem with the login request:', error);
+      });
+    }
   };
 
   const forgetPasswordFunction = () => {

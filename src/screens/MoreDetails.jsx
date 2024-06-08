@@ -91,68 +91,68 @@ const MoreDetails = ({
   registerFormSubmit = () => {
     const fullName = `${formData.firstName} ${formData.lastName}`;
     AsyncStorage.setItem('fullName', fullName);
-  console.log("other form details-",otherFormData);
-  if(true) {
-    fetch('http://34.131.227.229:8081/patient', {
+    console.log("other form details-", otherFormData);
+  
+    if (true) {
+      fetch('http://34.131.227.229:8081/patient', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-             phone_number: formData.mobileNumber,
-             first_name: formData.firstName,
-             last_name: formData.lastName,
-             date_of_birth: formData.dob,
-             age: formData.age,
-             gender: formData.gender,
-             marital_status: formData.maritalStatus,
-             alternate_mobile_number: formData.alternateNumber,
-             p_house_no: formData.house,
-             p_locality: formData.locality,
-             p_pin_code: formData.pincode,
-             p_state: formData.state,
-             p_city: formData.city,
-             p_district: formData.district,
-             address: formData.house+formData.locality+formData.state+formData.city+formData.district,
-             care_giver_first_name: formData.careFirstName,
-             care_giver_last_name: formData.careLastName,
-             care_giver_mobile_number: formData.careMobNo,
-             care_giver_relation: formData.careRelation,
-             kin_first_name: otherFormData.otherFirstName,
-             kin_last_name: otherFormData.otherLastName,
-             kin_mobile_number: otherFormData.othermobileNumber,
-             kin_relation: otherFormData.otherRelation,
-             care_giver_or_other: otherFormData.caregiverOrOther,
-             c_house_no: otherFormData.kinHouse,
-             c_locality: otherFormData.kinLocality,
-             c_pin_code: otherFormData.kinPincode,
-             c_state: otherFormData.kinState,
-             c_city: otherFormData.kinCity,
-             c_district: otherFormData.kinDistrict
+          phone_number: formData.mobileNumber,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          date_of_birth: formData.dob,
+          age: formData.age,
+          gender: formData.gender,
+          marital_status: formData.maritalStatus,
+          alternate_mobile_number: formData.alternateNumber,
+          p_house_no: formData.house,
+          p_locality: formData.locality,
+          p_pin_code: formData.pincode,
+          p_state: formData.state,
+          p_city: formData.city,
+          p_district: formData.district,
+          address: formData.house + formData.locality + formData.state + formData.city + formData.district,
+          care_giver_first_name: formData.careFirstName,
+          care_giver_last_name: formData.careLastName,
+          care_giver_mobile_number: formData.careMobNo,
+          care_giver_relation: formData.careRelation,
+          kin_first_name: otherFormData.otherFirstName,
+          kin_last_name: otherFormData.otherLastName,
+          kin_mobile_number: otherFormData.othermobileNumber,
+          kin_relation: otherFormData.otherRelation,
+          care_giver_or_other: otherFormData.caregiverOrOther,
+          c_house_no: otherFormData.kinHouse,
+          c_locality: otherFormData.kinLocality,
+          c_pin_code: otherFormData.kinPincode,
+          c_state: otherFormData.kinState,
+          c_city: otherFormData.kinCity,
+          c_district: otherFormData.kinDistrict
         }),
         referrerPolicy: 'strict-origin-when-cross-origin'
       })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-          AsyncStorage.setItem('userName', data.userName)
-          // dispatch(setUserName(data.userName));
-          navigation.navigate('/'+response.userName+':/firstPasswordCreation');
-       // navigate('/dashboard','{data?.userName}');
-       // history.push('/dashboard', { data });
-        console.log(data);
-        
-      })
-      .catch(error => {
-        // Handle error  
-      //  setErrormsg("UID or Password is incorrect");
-        console.error('There was a problem with the login request:', error);
-});
-  }}
+        .then(response => {
+          console.log(response);
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          AsyncStorage.setItem('userName', data.userName);
+          // Use data.userName instead of response.userName here
+          navigation.navigate('/FirstPasswordCreation');
+          console.log(data);
+        })
+        .catch(error => {
+          // Handle error
+          console.error('There was a problem with the login request:', error);
+        });
+    }
+  }
+  
 
   return (
     <ScrollView style={styles.container}>

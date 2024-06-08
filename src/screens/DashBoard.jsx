@@ -114,9 +114,9 @@ const Dashboard = () => {
         <Text style={styles.title}>Medi.ai</Text>
         <View style={styles.profileContainer}>
           <View style={styles.circularIcon}>
-            <Text style={styles.initials}>MJ{getInitials(name)}</Text>
+            <Text style={styles.initials}>{getInitials(name)}</Text>
           </View>
-          <Text style={styles.userInfo}>Patient: Mayank Jha{name}</Text>
+          <Text style={styles.userInfo}>Patient: {name}</Text>
           <Text style={styles.userInfo}>UID No: {userName}</Text>
         </View>
         <View
