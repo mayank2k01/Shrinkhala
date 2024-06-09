@@ -13,6 +13,7 @@ const Dashboard = () => {
   const [userName, setUserName] = useState('');
   const [name, setName] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [showSecondModal, setShowSecondModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
 
   const [reports, setReports] = useState([]);
@@ -72,9 +73,9 @@ const Dashboard = () => {
       console.error('Error downloading report:', error);
     }
   };
-  const handleUploadOption = () => {
-    setShowUploadModal(true);
-  };
+  // const handleUploadOption = () => {
+  //   setShowUploadModal(true);
+  // };
   const handleUploadPDFReport = () => {
     // Handle PDF upload logic
     setShowModal(false);
@@ -131,6 +132,11 @@ const Dashboard = () => {
 
   const getInitials = (name) => {
     return name.split(" ").map(part => part.charAt(0)).join("").toUpperCase();
+  };
+
+  const handleUploadOption = () => {
+    setShowModal(false);
+    setShowSecondModal(true);
   };
 
   return (
@@ -203,7 +209,7 @@ const Dashboard = () => {
               <Modal visible={showModal} transparent={true} animationType="slide">
                 <View style={styles.modalContainer}>
                   <View style={styles.modalContent}>
-                    <TouchableOpacity style={styles.modalClose} onPress={closeModal}>
+                    <TouchableOpacity style={styles.modalClose} onPress={() => setShowModal(false)}>
                       <Text style={styles.modalCloseText}>&times;</Text>
                     </TouchableOpacity>
                     <Text style={styles.modalTitle}>Upload a new Report</Text>
@@ -220,7 +226,7 @@ const Dashboard = () => {
 
             </View>
 
-            <Modal visible={showModal} transparent={true} animationType="slide">
+            <Modal visible={showSecondModal} transparent={true} animationType="slide">
               <View style={styles.customModalContainer}>
                 <View style={styles.customModalContent}>
                   <Text style={styles.modalTitle}>Select Upload Type</Text>
@@ -230,7 +236,7 @@ const Dashboard = () => {
                   <TouchableOpacity onPress={handleUploadImageReport} style={[styles.uploadOption, styles.lastUploadOption]}>
                     <Text style={styles.uploadOptionText}>Upload Image</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.modalClose} onPress={closeModal}>
+                  <TouchableOpacity style={styles.modalClose} onPress={() => setShowSecondModal(false)}>
                     <Text style={styles.modalCloseText}>&times;</Text>
                   </TouchableOpacity>
                 </View>
