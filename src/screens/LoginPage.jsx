@@ -30,6 +30,27 @@ const LoginPage = () => {
       const apiUrl = loginMethod === 'mobile' ? 'http://34.131.227.229:8081/patient/signin_phone' : 'http://34.131.227.229:8081/patient/login_uuid';
       const payload = loginMethod === 'mobile' ? { phone_number: userId, password: password } : { user_id: userId, password: password };
       console.log(apiUrl+' '+payload);
+      // fetch('http://34.131.227.229:8081/patient/'+userId,{
+      //   method: 'GET',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   referrerPolicy: 'strict-origin-when-cross-origin'
+      // })
+      // .then(response => {
+      //   if (!response.ok) {
+      //     throw new Error('Network response was not ok');
+      //   }
+      //   return response.json();
+      // })
+      // .then(data => {
+      //   console.log(data);
+      // })
+      // .catch(error => {
+      //   // Handle error
+      //   console.error('Credentials', error);
+      // });
+
       fetch(apiUrl, {
         method: 'POST',
         headers: {

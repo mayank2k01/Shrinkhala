@@ -16,7 +16,7 @@ import CreateNewPassword from '../src/screens/CreateNewPassword';
 import Dashboard from '../src/screens/DashBoard';
 import ShareReport from '../src/screens/ShareReport';
 import Preview from '../src/screens/Preview';
-// import ReportViewer from '../src/screens/ReportViewer';
+import ReportViewer from '../src/screens/ReportViewer';
 
 
 const Stack = createNativeStackNavigator();
@@ -65,7 +65,7 @@ const AppNavigator = () => {
          <Stack.Screen name="CreateNewPassword" component={CreateNewPassword} />
          <Stack.Screen name="Dashboard" component={Dashboard} options={{ headerShown: false }} />
          <Stack.Screen name="ShareReport" component={ShareReport} />
-         {/* <Stack.Screen name="ReportViewer" component={ReportViewer} /> */}
+         <Stack.Screen name="ReportViewer" component={ReportViewer} />
          <Stack.Screen name="Preview" component={Preview} />
       </Stack.Navigator>
     
