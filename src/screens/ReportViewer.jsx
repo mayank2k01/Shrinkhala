@@ -10,7 +10,7 @@ const ReportViewer = ({ route }) => {
 
   // Render PDF or image based on the file type
   const renderFile = () => {
-    console.log('ft---',url);
+    console.log('url---',url);
     if (fileType === 'pdf') {
     //   return (
     //     <Pdf
@@ -28,7 +28,7 @@ const ReportViewer = ({ route }) => {
     //     />
     //   );
     } else{ //if (['jpg', 'jpeg', 'png', 'gif'].includes(fileType)) {
-      return <Image source={{  url }} style={styles.image} />;
+      return <img src='https://storage.googleapis.com/extraction_medi/uploads/%22rjjjj%22_Aadhaar_letter_large_20240516_140403.png' style={styles.image} />;
     } 
     // else {
     //   return <Text>Unsupported file type</Text>;
@@ -37,11 +37,11 @@ const ReportViewer = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      {/* <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
           <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
       <View style={styles.content}>
         {renderFile()}
       </View>
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: '80%',
+    height: 'auto',
     resizeMode: 'contain',
   },
 });

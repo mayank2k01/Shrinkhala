@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Button, StyleSheet, FlatList, TouchableOpacity, Modal, ImageBackground, Alert, Linking, SafeAreaView, ScrollView } from "react-native";
 import axios from "axios";
 import * as ImagePicker from 'expo-image-picker';
-// import * as DocumentPicker from 'expo-document-picker';
+// import * as DocumentPicker from 'react-native-document-picker';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialIcons } from '@expo/vector-icons';
 import backgroundImage from '../../assets/transparent-bg.png';
 import whiteimg from '../../assets/white.png';
+// import FilePickerManager from 'react-native-file-picker';
 
 const Dashboard = () => {
   const [userName, setUserName] = useState('');
@@ -76,10 +77,20 @@ const Dashboard = () => {
   // const handleUploadOption = () => {
   //   setShowUploadModal(true);
   // };
-  const handleUploadPDFReport = () => {
+  const handleUploadPDFReport = async () => {
     // Handle PDF upload logic
     setShowModal(false);
     // Your logic to handle PDF upload
+    // FilePickerManager.showFilePicker(null, (response) => {
+    //   if (response.didCancel) {
+    //     console.log('User cancelled file picker');
+    //   } else if (response.error) {
+    //     console.log('FilePickerManager Error: ', response.error);
+    //   } else {
+    //     console.log('File URI: ', response.uri);
+    //     // Handle file upload or other processing
+    //   }
+    // });
   };
 
   const handleUploadImageReport = async () => {
