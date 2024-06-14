@@ -17,6 +17,7 @@ import Dashboard from '../src/screens/DashBoard';
 import ShareReport from '../src/screens/ShareReport';
 import Preview from '../src/screens/Preview';
 import ReportViewer from '../src/screens/ReportViewer';
+import PreviewPDF from '../src/screens/PreviewPDF';
 
 
 const Stack = createNativeStackNavigator();
@@ -67,6 +68,7 @@ const AppNavigator = () => {
          <Stack.Screen name="ShareReport" component={ShareReport} />
          <Stack.Screen name="ReportViewer" component={ReportViewer} />
          <Stack.Screen name="Preview" component={Preview} />
+         <Stack.Screen name="PreviewPDF" component={PreviewPDF} />
       </Stack.Navigator>
     
   );

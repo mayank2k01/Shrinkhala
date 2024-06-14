@@ -9,6 +9,13 @@ import { MaterialIcons } from '@expo/vector-icons';
 import backgroundImage from '../../assets/transparent-bg.png';
 import whiteimg from '../../assets/white.png';
 // import FilePickerManager from 'react-native-file-picker';
+import * as DocumentPicker from 'expo-document-picker';
+import * as Permissions from 'expo-permissions';
+
+const getPermission = async () => {
+  const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+  return status === 'granted';
+};
 
 const Dashboard = () => {
   const [userName, setUserName] = useState('');
@@ -16,6 +23,7 @@ const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [showSecondModal, setShowSecondModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [file, setFile] = useState(null); 
 
   const [reports, setReports] = useState([]);
   const [activeSpan, setActiveSpan] = useState("All");
@@ -80,17 +88,24 @@ const Dashboard = () => {
   const handleUploadPDFReport = async () => {
     // Handle PDF upload logic
     setShowModal(false);
-    // Your logic to handle PDF upload
-    // FilePickerManager.showFilePicker(null, (response) => {
-    //   if (response.didCancel) {
-    //     console.log('User cancelled file picker');
-    //   } else if (response.error) {
-    //     console.log('FilePickerManager Error: ', response.error);
-    //   } else {
-    //     console.log('File URI: ', response.uri);
-    //     // Handle file upload or other processing
-    //   }
-    // });
+    getPermission();
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: 'application/pdf',
+        copyToCacheDirectory: true,
+        multiple: true,
+      });
+      console.log('res--',result);
+
+      if (true) {
+        setFile(result);
+        navigation.navigate('PreviewPDF', { uri: result.assets[0].uri });
+      } else {
+        console.log("Document picking cancelled");
+      }
+    } catch (err) {
+      console.error("Error picking document: ", err);
+    }
   };
 
   const handleUploadImageReport = async () => {
