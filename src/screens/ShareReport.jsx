@@ -144,7 +144,7 @@ const ShareReport = () => {
     };
 
     return (
-        <>
+        <View style={{flex:1,backgroundColor: "white"}}>
             {/* <View style={styles.header}>
                 <TouchableOpacity onPress={handleBack}>
                     <MaterialIcons name="arrow-back" size={24} color="gray" />
@@ -165,8 +165,10 @@ const ShareReport = () => {
                         <Text style={styles.buttonText}>Via QR Scanner</Text>
                     </TouchableOpacity>
                 </View>
+                <View style={styles.divider} />
                 <View style={styles.doctorsList}>
                     <Text style={styles.doctorsListTitle}>Shared with</Text>
+                    {/* <View style={styles.divider} /> */}
                     <Text style={styles.doctorsListSubtitle}>Doctors you have shared all your reports</Text>
                     {doctorsList.map((doctor, index) => (
                         <View key={index} style={styles.doctorItem}>
@@ -217,7 +219,7 @@ const ShareReport = () => {
             {showOtpPopup && (
                 <OTPPopup userName={userName} otp={otp} onClose={() => setShowOtpPopup(false)} />
             )}
-        </>
+        </View>
     );
 };
 
@@ -355,6 +357,10 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
     },
+    divider: {
+        borderBottomColor: 'grey',
+        borderBottomWidth: StyleSheet.hairlineWidth,
+      },
 });
 
 export default ShareReport;

@@ -414,7 +414,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   divider: {
-    borderBottomColor: 'black',
+    borderBottomColor: 'grey',
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   modalContent: {
