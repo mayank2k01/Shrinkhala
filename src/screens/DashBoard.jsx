@@ -11,6 +11,8 @@ import whiteimg from '../../assets/white.png';
 // import FilePickerManager from 'react-native-file-picker';
 import * as DocumentPicker from 'expo-document-picker';
 import * as Permissions from 'expo-permissions';
+import * as FileSystem from 'expo-file-system';
+import * as mime from 'react-native-mime-types';
 
 const getPermission = async () => {
   const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
