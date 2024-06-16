@@ -1,9 +1,9 @@
 // PreviewPDF.js
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-// import { WebView } from 'react-native-webview';
+import { WebView } from 'react-native-webview';
 // import { Linking, Button } from 'react-native';
-import Pdf from 'react-native-pdf';
+// import Pdf from 'react-native-pdf';
 import { useRoute } from '@react-navigation/native';
 
 const PreviewPDF = () => {
@@ -13,14 +13,14 @@ const PreviewPDF = () => {
 
   return (
     <View style={styles.container}>
-      {/* <WebView
+      <WebView
         source={{ uri }}
         style={styles.webView}
         originWhitelist={['*']}
         useWebKit
         startInLoadingState
-      /> */}
-      <Pdf
+      />
+      {/* <Pdf
         source={source}
         onLoadComplete={(numberOfPages, filePath) => {
           console.log(`Number of pages: ${numberOfPages}`);
@@ -32,7 +32,7 @@ const PreviewPDF = () => {
           console.log(error);
         }}
         style={styles.pdf}
-      />
+      /> */}
     </View>
   );
 };
