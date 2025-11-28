@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
 const OtpPopup = ({ userName, otp, onClose }) => {
+
     return (
         <Modal
             transparent={true}
