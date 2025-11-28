@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-// import Pdf from 'react-native-pdf';
 
 const ReportViewer = ({ route }) => {
   const { url } = route.params; // Assuming url is passed as a route parameter
@@ -28,8 +27,8 @@ const ReportViewer = ({ route }) => {
     //     />
     //   );
     } else{ //if (['jpg', 'jpeg', 'png', 'gif'].includes(fileType)) {
-      return <img src='https://storage.googleapis.com/extraction_medi/uploads/%22rjjjj%22_Aadhaar_letter_large_20240516_140403.png' style={styles.image} />;
-    } 
+      return <img src={url} style={styles.image} />;
+    }
     // else {
     //   return <Text>Unsupported file type</Text>;
     // }

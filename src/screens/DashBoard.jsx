@@ -2,31 +2,31 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Button, StyleSheet, FlatList, TouchableOpacity, Modal, ImageBackground, Alert, Linking, SafeAreaView, ScrollView } from "react-native";
 import axios from "axios";
 import * as ImagePicker from 'expo-image-picker';
-// import * as DocumentPicker from 'react-native-document-picker';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialIcons } from '@expo/vector-icons';
 import backgroundImage from '../../assets/transparent-bg.png';
 import whiteimg from '../../assets/white.png';
-// import FilePickerManager from 'react-native-file-picker';
 import * as DocumentPicker from 'expo-document-picker';
-import * as Permissions from 'expo-permissions';
 import * as FileSystem from 'expo-file-system';
-import * as mime from 'react-native-mime-types';
+
 
 const getPermission = async () => {
-  const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
-  return status === 'granted';
+  const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  if (status !== 'granted') {
+    console.log('Permission not granted', 'Please grant the permission to access documents on your device.');
+    return false;
+  }
+  return true;
 };
 
 const Dashboard = () => {
   const [userName, setUserName] = useState('');
   const [name, setName] = useState('');
+  const [pdfSource, setPdfSource] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showSecondModal, setShowSecondModal] = useState(false);
-  const [showUploadModal, setShowUploadModal] = useState(false);
-  const [file, setFile] = useState(null); 
-
+  const [file, setFile] = useState(null);
   const [reports, setReports] = useState([]);
   const [activeSpan, setActiveSpan] = useState("All");
   const [activeTab, setActiveTab] = useState('Home');
@@ -84,32 +84,28 @@ const Dashboard = () => {
       console.error('Error downloading report:', error);
     }
   };
-  // const handleUploadOption = () => {
-  //   setShowUploadModal(true);
-  // };
+
   const handleUploadPDFReport = async () => {
-    // Handle PDF upload logic
-    setShowModal(false);
-    getPermission();
     try {
       const result = await DocumentPicker.getDocumentAsync({
         type: 'application/pdf',
-        copyToCacheDirectory: true,
-        multiple: true,
       });
-      console.log('res--',result);
+      if (!result.canceled) {
+        const pdfFile = result.assets[0];
+        console.log(pdfFile);
+        if (pdfFile.uri) {
+          setPdfSource(pdfFile.uri);
+          console.log(pdfFile)
+          navigation.navigate('PreviewPDF', { uri: pdfFile.uri });
 
-      if (true) {
-        setFile(result);
-        navigation.navigate('PreviewPDF', { uri: result.assets[0].uri });
-      } else {
-        console.log("Document picking cancelled");
+        } else {
+          console.error('Error: PDF data is null');
+        }
       }
     } catch (err) {
-      console.error("Error picking document: ", err);
+      console.error('Error uploading PDF:', err);
     }
   };
-
   const handleUploadImageReport = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -147,7 +143,7 @@ const Dashboard = () => {
   };
 
   const handleView = (url) => {
-    navigation.navigate('ReportViewer', { url });
+    navigation.navigate('ReportView er', { url });
   };
 
   const handleSpanClick = (span) => {

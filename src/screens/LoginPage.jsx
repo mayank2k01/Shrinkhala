@@ -1,5 +1,4 @@
-// screens/LoginPage.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -9,13 +8,17 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [loginMethod, setLoginMethod] = useState('mobile'); // Default to login via mobile
-  const [continueDisable, setContinueDisable] = useState(true);
+
+  useEffect(() => {
+    if (loginMethod === 'mobile' && userId.length !== 10) {
+      setErrorMsg('Please enter a valid 10-digit mobile number.');
+    } else {
+      setErrorMsg('');
+    }
+  }, [userId, loginMethod]);
 
   const handleUserIdChange = (text) => {
     setUserId(text);
-    if (text.length === 10) {
-      setContinueDisable(false);
-    }
   };
 
   const handlePasswordChange = (text) => {
@@ -29,28 +32,6 @@ const LoginPage = () => {
     } else {
       const apiUrl = loginMethod === 'mobile' ? 'http://34.131.227.229:8081/patient/signin_phone' : 'http://34.131.227.229:8081/patient/login_uuid';
       const payload = loginMethod === 'mobile' ? { phone_number: userId, password: password } : { user_id: userId, password: password };
-      console.log(apiUrl+' '+payload);
-      // fetch('http://34.131.227.229:8081/patient/'+userId,{
-      //   method: 'GET',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   },
-      //   referrerPolicy: 'strict-origin-when-cross-origin'
-      // })
-      // .then(response => {
-      //   if (!response.ok) {
-      //     throw new Error('Network response was not ok');
-      //   }
-      //   return response.json();
-      // })
-      // .then(data => {
-      //   console.log(data);
-      // })
-      // .catch(error => {
-      //   // Handle error
-      //   console.error('Credentials', error);
-      // });
-
       fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -59,22 +40,21 @@ const LoginPage = () => {
         body: JSON.stringify(payload),
         referrerPolicy: 'strict-origin-when-cross-origin'
       })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        // Handle successful login response
-        navigation.navigate('Dashboard'); // Navigate to dashboard upon successful login
-    //     console.log(data);
-      })
-      .catch(error => {
-        // Handle error
-        setErrorMsg("Phone Number/UserID or Password is incorrect");
-        console.error('There was a problem with the login request:', error);
-      });
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(data => {
+            // Handle successful login response
+            navigation.navigate('Dashboard'); // Navigate to dashboard upon successful login
+          })
+          .catch(error => {
+            // Handle error
+            setErrorMsg("Phone Number/UserID or Password is incorrect");
+            console.error('There was a problem with the login request:', error);
+          });
     }
   };
 
@@ -86,60 +66,64 @@ const LoginPage = () => {
     navigation.navigate('RegistrationForm');
   }
 
+  const isContinueDisabled = () => {
+    return loginMethod === 'mobile' ? userId.length !== 10 || !password : !userId || !password;
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Shrinkhala</Text>
-      <Text style={styles.subtitle}>Login via</Text>
-      <View style={styles.buttonContainer}>
-        <Button title="Mobile No." onPress={() => setLoginMethod('mobile')} color={loginMethod === 'mobile' ? '#38b2ac' : '#4fd1c5'} />
-        <Button title="UID No." onPress={() => setLoginMethod('uid')} color={loginMethod === 'uid' ? '#38b2ac' : '#4fd1c5'} />
-      </View>
-      <View>
-        {loginMethod === 'mobile' ? (
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Enter your Mobile Number:</Text>
-            <TextInput
-              style={styles.input}
-              maxLength={10}
-              keyboardType="numeric"
-              onChangeText={handleUserIdChange}
-            />
-          </View>
-        ) : (
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Enter your UID:</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={handleUserIdChange}
-            />
-          </View>
-        )}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Enter Password:</Text>
-          <TextInput
-            style={styles.input}
-            secureTextEntry
-            onChangeText={handlePasswordChange}
-          />
+      <View style={styles.container}>
+        <Text style={styles.title}>Shrinkhala</Text>
+        <Text style={styles.subtitle}>Login via</Text>
+        <View style={styles.buttonContainer}>
+          <Button title="Mobile No." onPress={() => setLoginMethod('mobile')} color={loginMethod === 'mobile' ? '#38b2ac' : '#4fd1c5'} />
+          <Button title="UID No." onPress={() => setLoginMethod('uid')} color={loginMethod === 'uid' ? '#38b2ac' : '#4fd1c5'} />
         </View>
-        {errorMsg ? <Text style={styles.errorMsg}>{errorMsg}</Text> : null}
-        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit} disabled={continueDisable}>
-          <Text style={styles.submitButtonText}>Continue</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={forgetPasswordFunction}>
-          <Text style={styles.linkText}>Forget Password?</Text>
-        </TouchableOpacity>
-        <Text style={styles.signUpText}>
-          Don't have an account?{' '}
-          <Text style={styles.signUpLink} onPress={goToSignUp}>
-            Sign Up
+        <View>
+          {loginMethod === 'mobile' ? (
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Enter your Mobile Number:</Text>
+                <TextInput
+                    style={styles.input}
+                    maxLength={10}
+                    keyboardType="numeric"
+                    onChangeText={handleUserIdChange}
+                />
+              </View>
+          ) : (
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Enter your UID:</Text>
+                <TextInput
+                    style={styles.input}
+                    onChangeText={handleUserIdChange}
+                />
+              </View>
+          )}
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Enter Password:</Text>
+            <TextInput
+                style={styles.input}
+                secureTextEntry
+                onChangeText={handlePasswordChange}
+            />
+          </View>
+          {errorMsg ? <Text style={styles.errorMsg}>{errorMsg}</Text> : null}
+          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit} disabled={isContinueDisabled()}>
+            <Text style={styles.submitButtonText}>Continue</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={forgetPasswordFunction}>
+            <Text style={styles.linkText}>Forget Password?</Text>
+          </TouchableOpacity>
+          <Text style={styles.signUpText}>
+            Don't have an account?{' '}
+            <Text style={styles.signUpLink} onPress={goToSignUp}>
+              Sign Up
+            </Text>
           </Text>
-        </Text>
+        </View>
+        <View style={styles.footerContainer}>
+          <Text style={styles.footerText}>A unit of : Ninety Seven Medicare Private Limited</Text>
+        </View>
       </View>
-      <View style={styles.footerContainer}>
-        <Text style={styles.footerText}>A unit of : Ninety Seven Medicare Private Limited</Text>
-      </View>
-    </View>
   );
 };
 
@@ -188,6 +172,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
+    opacity: 1,
   },
   submitButtonText: {
     color: 'white',
@@ -218,7 +203,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    // backgroundColor: '#f0f0f0',
     height: 20,
   },
   footerText: {
